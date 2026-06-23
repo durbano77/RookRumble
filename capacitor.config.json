@@ -1,0 +1,9 @@
+{
+  "appId": "com.yourname.ezgame",
+  "appName": "EzGame",
+  "webDir": ".",
+  "server": {
+    "url": "https://YOUR-APP.onrender.com",
+    "cleartext": false
+  }
+}

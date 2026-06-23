@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EzGame - Casual Chess Club</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body data-theme="forest" data-board="classic" data-pieces="classic" data-pattern="argyle">
+    <main class="app">
+      <button class="menu-button" id="menu-button" type="button" aria-label="Open menu">
+        ⚙
+      </button>
+
+      <section class="hero">
+        <p class="eyebrow">EzGame</p>
+        <h1>Casual Chess Club</h1>
+        <p class="subtitle">
+          Classic chess and playful variants for local rooms, phones, and bot matches.
+        </p>
+      </section>
+
+      <section class="step-panel is-active" id="setup-panel" data-step-panel="setup">
+        <section class="network-grid">
+          <article class="network-card">
+            <span class="label">Open This URL</span>
+            <strong id="server-url">Connecting...</strong>
+            <p>Use this address on both devices.</p>
+          </article>
+          <article class="network-card">
+            <span class="label">Room Code</span>
+            <strong id="room-code-display">----</strong>
+            <p>Create or join a room, then choose a game.</p>
+          </article>
+          <article class="network-card">
+            <span class="label">Connection</span>
+            <strong id="connection-state">Offline</strong>
+            <p id="connection-hint">Waiting for the chess server.</p>
+          </article>
+        </section>
+
+        <section class="mode-grid">
+          <article class="mode-card">
+            <span class="mode-kicker">Online</span>
+            <h2>Create Or Join A Room</h2>
+            <p>Play on two devices over your LAN with a numeric room code.</p>
+            <div class="button-row">
+              <button id="create-room" type="button">Create Room</button>
+            </div>
+            <div class="join-group">
+              <label class="field">
+                <span>Join Existing Room</span>
+                <input
+                  id="room-code-input"
+                  type="text"
+                  maxlength="6"
+                  inputmode="numeric"
+                  pattern="[0-9]*"
+                  placeholder="123456"
+                  autocomplete="off"
+                  autocapitalize="off"
+                  spellcheck="false"
+                />
+              </label>
+              <button id="join-room" type="button">Join Room</button>
+            </div>
+          </article>
+
+          <article class="mode-card">
+            <span class="mode-kicker">Offline</span>
+            <h2>Play A Bot</h2>
+            <p>Practice against a personality-driven bot without waiting for a second device.</p>
+            <div class="bot-group">
+              <label class="field">
+                <span>Bot Personality</span>
+                <select id="bot-difficulty">
+                  <option value="dougdoug">DougDoug Chaos</option>
+                  <option value="gotham">Gotham Tactics</option>
+                  <option value="magnus">Magnus-ish Endboss</option>
+                </select>
+                <small id="bot-description">Chaotic streamer-brain chess.</small>
+              </label>
+              <button id="play-bot" type="button">Play Bot</button>
+            </div>
+          </article>
+        </section>
+      </section>
+
+      <section class="step-panel" id="games-panel" data-step-panel="games">
+        <section class="step-actions">
+          <button class="secondary-button" id="back-to-setup" type="button">Back To Opponent</button>
+          <button class="secondary-button" id="leave-room" type="button">Leave Room</button>
+          <button id="continue-to-play" type="button">Continue To Board</button>
+        </section>
+
+        <section class="game-hub" id="game-hub" aria-label="Chess variants">
+          <header class="game-hub-header">
+            <span class="mode-kicker">Game Selection</span>
+            <h2 class="game-hub-title">Choose A Game</h2>
+            <p class="game-hub-hint" id="variant-picker-hint">
+              Create or join a room to pick a mode.
+            </p>
+          </header>
+          <div class="game-card-grid" id="variant-picker"></div>
+        </section>
+      </section>
+
+      <section class="step-panel" id="play-panel" data-step-panel="play">
+        <section class="step-actions">
+          <button class="secondary-button" id="play-back-to-games" type="button">Back To Games</button>
+          <button class="secondary-button" id="play-back-to-setup" type="button">Back To Opponent</button>
+        </section>
+
+        <section class="hud">
+          <article class="score-card player-one">
+            <span class="label">White</span>
+            <strong id="score1">White</strong>
+            <p id="player1-state">Waiting</p>
+          </article>
+          <article class="score-card player-two">
+            <span class="label">Black</span>
+            <strong id="score2">Black</strong>
+            <p id="player2-state">Waiting</p>
+          </article>
+          <article class="score-card status-card">
+            <span class="label">You Are</span>
+            <strong id="role-display">Not In Room</strong>
+            <p id="role-hint">Create or join a room to claim a side.</p>
+          </article>
+        </section>
+
+        <section class="game-shell">
+          <div class="game-stage">
+            <div class="chess-view" id="chess-view">
+              <div class="chess-meta">
+                <strong id="chess-turn">Choose a variant</strong>
+                <span id="chess-result">Game not started</span>
+              </div>
+              <div class="mutator-panel is-hidden" id="mutator-panel">
+                <span id="mutator-title">Choose a Thress card</span>
+                <div class="mutator-options" id="mutator-options"></div>
+              </div>
+              <div class="chess-board" id="chess-board" aria-label="Chess board"></div>
+              <div class="promotion-panel is-hidden" id="promotion-panel">
+                <span>Promote to</span>
+                <div class="promotion-options">
+                  <button data-promotion="q" type="button">Queen</button>
+                  <button data-promotion="r" type="button">Rook</button>
+                  <button data-promotion="b" type="button">Bishop</button>
+                  <button data-promotion="n" type="button">Knight</button>
+                </div>
+              </div>
+            </div>
+
+            <div id="overlay" class="overlay">
+              <div class="overlay-card">
+                <p id="overlay-kicker" class="overlay-kicker">Chess Room</p>
+                <h2 id="overlay-title">Create Or Join A Room</h2>
+                <p id="overlay-text">
+                  Once both sides are connected, the host chooses a variant.
+                </p>
+                <button id="overlay-action" type="button">Create Room</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <p id="status">
+              Start the Python server, open this page on both devices, and create
+              a room.
+            </p>
+            <div class="button-row">
+              <button id="start-match" type="button">Start</button>
+              <button id="pause-match" type="button">Pause</button>
+              <button id="restart-match" type="button">Restart</button>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <div class="menu-modal is-hidden" id="menu-modal" role="dialog" aria-modal="true" aria-labelledby="menu-title">
+        <div class="menu-card">
+          <div class="menu-view" id="menu-main-view">
+            <header class="menu-header">
+              <div>
+                <p class="mode-kicker">Menu</p>
+                <h2 id="menu-title">Quick Actions</h2>
+              </div>
+              <button class="icon-button" id="close-menu" type="button" aria-label="Close menu">×</button>
+            </header>
+            <div class="menu-actions">
+              <button id="menu-exit-main" type="button">Exit To Main Menu</button>
+              <button id="menu-exit-games" type="button">Exit To Game Selection</button>
+              <button id="menu-open-settings" type="button">Settings</button>
+            </div>
+          </div>
+
+          <div class="menu-view is-hidden" id="menu-settings-view">
+            <header class="menu-header">
+              <div>
+                <p class="mode-kicker">Settings</p>
+                <h2>Appearance</h2>
+              </div>
+              <button class="icon-button" id="settings-back" type="button" aria-label="Back to menu">←</button>
+            </header>
+            <div class="settings-layout">
+              <div class="settings-fields">
+                <label class="field">
+                  <span>Theme</span>
+                  <select id="theme-select">
+                    <option value="forest">Forest Club</option>
+                    <option value="midnight">Midnight</option>
+                    <option value="paper">Paper Light</option>
+                    <option value="ocean">Ocean</option>
+                    <option value="berry">Berry</option>
+                  </select>
+                </label>
+                <label class="field">
+                  <span>Background</span>
+                  <select id="pattern-select">
+                    <option value="argyle">Argyle</option>
+                    <option value="dots">Dots</option>
+                    <option value="grid">Grid</option>
+                    <option value="plain">Plain</option>
+                  </select>
+                </label>
+                <label class="field">
+                  <span>Board</span>
+                  <select id="board-select">
+                    <option value="classic">Classic</option>
+                    <option value="slate">Slate</option>
+                    <option value="sand">Sand</option>
+                    <option value="contrast">High Contrast</option>
+                  </select>
+                </label>
+                <label class="field">
+                  <span>Pieces</span>
+                  <select id="piece-select">
+                    <option value="classic">Classic</option>
+                    <option value="three_d">3D</option>
+                    <option value="woodcut">Woodcut</option>
+                    <option value="marble">Marble</option>
+                  </select>
+                </label>
+              </div>
+              <div class="settings-preview" aria-label="Board preview">
+                <span>Preview</span>
+                <div class="preview-board">
+                  <div class="preview-square light piece-black">♜</div>
+                  <div class="preview-square dark piece-white">♞</div>
+                  <div class="preview-square light piece-white">♛</div>
+                  <div class="preview-square dark piece-black">♚</div>
+                  <div class="preview-square dark piece-white">♝</div>
+                  <div class="preview-square light piece-black">♟</div>
+                  <div class="preview-square dark piece-black">♞</div>
+                  <div class="preview-square light piece-white">♔</div>
+                  <div class="preview-square light piece-white">♙</div>
+                  <div class="preview-square dark piece-black">♟</div>
+                  <div class="preview-square light piece-black">♛</div>
+                  <div class="preview-square dark piece-white">♖</div>
+                  <div class="preview-square dark piece-black">♝</div>
+                  <div class="preview-square light piece-white">♘</div>
+                  <div class="preview-square dark piece-white">♕</div>
+                  <div class="preview-square light piece-black">♚</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="game.js"></script>
+  </body>
+</html>
