@@ -1,0 +1,132 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+  background: var(--pattern-layer), var(--body-gradient);
+  background-size: var(--pattern-size);
+  color: var(--text);
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+.app {
+  width: min(100%, 1080px);
+  margin: 0 auto;
+  padding: 24px 14px 36px;
+}
+
+/* ── Hero ────────────────────────────────────────────────────────────────── */
+
+.hero {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  text-transform: uppercase;
+  letter-spacing: 0;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: 3.6rem;
+}
+
+.subtitle {
+  margin: 12px auto 0;
+  max-width: 48rem;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+/* ── Flow bar ────────────────────────────────────────────────────────────── */
+
+.flow-bar {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+  padding: 8px;
+  border: 1px solid var(--panel-border);
+  border-radius: 999px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+}
+
+.flow-step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 12px;
+  color: var(--text);
+  background: transparent;
+}
+
+.flow-step span {
+  display: grid;
+  width: 24px;
+  aspect-ratio: 1;
+  place-items: center;
+  border-radius: 999px;
+  color: #05111c;
+  background: var(--accent-one);
+}
+
+.flow-step.is-active {
+  color: #05111c;
+  background: linear-gradient(135deg, var(--accent-one), var(--accent-two));
+}
+
+.flow-step.is-active span {
+  background: rgba(255, 255, 255, 0.78);
+}
+
+/* ── Appearance panel ────────────────────────────────────────────────────── */
+
+.appearance-panel {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+  padding: 14px;
+  border-radius: 18px;
+}
+
+/* ── Step panels ─────────────────────────────────────────────────────────── */
+
+.step-panel {
+  display: none;
+  animation: step-in 220ms ease both;
+}
+
+.step-panel.is-active {
+  display: block;
+}
+
+@keyframes step-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.step-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 12px;
+  border: 1px solid var(--panel-border);
+  border-radius: 18px;
+  background: var(--panel);
+}

@@ -1,0 +1,50 @@
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 22px;
+  border-radius: 18px;
+  background:
+    linear-gradient(135deg, rgba(244, 211, 94, 0.14), rgba(127, 176, 105, 0.09)),
+    rgba(12, 13, 10, 0.72);
+}
+
+.overlay.is-hidden { display: none; }
+
+.overlay-card {
+  width: min(100%, 420px);
+  padding: 26px 24px;
+  border-radius: 8px;
+  background: rgba(21, 23, 17, 0.96);
+  border: 1px solid rgba(244, 211, 94, 0.22);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+  text-align: center;
+}
+
+.overlay-kicker {
+  margin: 0 0 10px;
+  color: var(--accent-one);
+  text-transform: uppercase;
+  letter-spacing: 0;
+  font-size: 0.78rem;
+}
+
+.overlay-card h2 { margin: 0; font-size: 2.3rem; }
+.overlay-card p  { margin: 14px 0 0; color: var(--muted); line-height: 1.55; }
+.overlay-card button { margin-top: 18px; }
+
+/* ── Info panel below board ──────────────────────────────────────────────── */
+
+.panel {
+  margin-top: 18px;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.panel p {
+  margin: 0 0 14px;
+  color: var(--muted);
+  line-height: 1.45;
+}

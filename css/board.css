@@ -1,0 +1,166 @@
+.game-shell {
+  border-radius: 8px;
+  padding: 18px;
+}
+
+.game-stage {
+  position: relative;
+  width: min(100%, 640px);
+  min-height: min(88vw, 420px);
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.chess-view {
+  width: min(100%, 640px);
+  margin: 0 auto;
+}
+
+.chess-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 10px;
+  color: var(--muted);
+}
+
+.chess-meta strong {
+  color: var(--text);
+}
+
+/* ── Mutator panel (Thress) ──────────────────────────────────────────────── */
+
+.mutator-panel {
+  margin-bottom: 12px;
+  padding: 14px;
+  border: 1px solid rgba(244, 211, 94, 0.28);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(244, 211, 94, 0.14), rgba(127, 176, 105, 0.08)),
+    rgba(21, 23, 17, 0.94);
+}
+
+.mutator-panel > span {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--accent-one);
+  font-weight: 700;
+}
+
+.mutator-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.mutator-card {
+  display: grid;
+  gap: 6px;
+  min-height: 106px;
+  padding: 14px;
+  text-align: left;
+  color: var(--text);
+  background: rgba(12, 13, 10, 0.82);
+  border: 1px solid rgba(244, 220, 166, 0.22);
+  border-radius: 8px;
+}
+
+.mutator-card span   { font-weight: 800; }
+.mutator-card strong { color: var(--muted); font-size: 0.9rem; line-height: 1.35; }
+
+/* ── Chess board ─────────────────────────────────────────────────────────── */
+
+.chess-board {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  width: min(88vw, 640px);
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid rgba(244, 220, 166, 0.2);
+  box-shadow: var(--shadow);
+}
+
+.chess-square {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 1;
+  padding: 0;
+  border-radius: 0;
+  color: var(--piece-black);
+  background: var(--board-light);
+  font-size: 3.6rem;
+  line-height: 1;
+  transition: box-shadow 120ms ease, filter 120ms ease;
+}
+
+.chess-square.dark          { background: var(--board-dark); }
+.chess-square.is-last-move  { box-shadow: inset 0 0 0 999px rgba(255, 209, 102, 0.28); }
+.chess-square.is-selected   { box-shadow: inset 0 0 0 4px #ff5d73; }
+.chess-square.is-movable    { cursor: pointer; }
+
+.chess-square.is-target::after {
+  content: "";
+  position: absolute;
+  inset: 50% auto auto 50%;
+  transform: translate(-50%, -50%);
+  width: 28%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgba(5, 17, 28, 0.38);
+  pointer-events: none;
+}
+
+.chess-square.is-target.has-piece::after {
+  width: 76%;
+  background: transparent;
+  border: 4px solid rgba(255, 93, 115, 0.65);
+}
+
+.chess-square.piece-white {
+  color: var(--piece-white);
+  text-shadow:
+    0 2px 0 rgba(0, 0, 0, 0.4),
+    0 0 8px rgba(0, 0, 0, 0.25);
+}
+
+.chess-square.piece-black {
+  color: var(--piece-black);
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.3),
+    0 0 8px rgba(255, 255, 255, 0.16);
+}
+
+/* Fog of War: hidden squares get a dark cloudy overlay */
+.chess-square.is-fog {
+  background-image:
+    radial-gradient(ellipse at 35% 42%, rgba(50, 80, 140, 0.18) 0%, transparent 55%),
+    radial-gradient(ellipse at 68% 62%, rgba(30, 55, 110, 0.14) 0%, transparent 50%);
+  background-color: rgb(8, 13, 26);
+  color: transparent;
+}
+
+/* ── Promotion panel ─────────────────────────────────────────────────────── */
+
+.promotion-panel {
+  margin-top: 12px;
+  padding: 14px;
+  border-radius: 8px;
+  background: rgba(21, 23, 17, 0.94);
+  border: 1px solid var(--panel-border);
+}
+
+.promotion-panel span {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--muted);
+}
+
+.promotion-options {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}

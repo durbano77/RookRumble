@@ -1,0 +1,150 @@
+:root {
+  color-scheme: dark;
+  --bg: #151711;
+  --panel: rgba(248, 241, 222, 0.08);
+  --panel-strong: rgba(248, 241, 222, 0.13);
+  --panel-border: rgba(244, 220, 166, 0.2);
+  --text: #fff7df;
+  --muted: #cdbf9d;
+  --accent-one: #f4d35e;
+  --accent-two: #7fb069;
+  --accent-three: #d6a94a;
+  --board-light: #eee2c5;
+  --board-dark: #66805f;
+  --piece-white: #fff8e3;
+  --piece-black: #172019;
+  --input-bg: rgba(4, 14, 23, 0.92);
+  --card-bg: #ffffff;
+  --card-text: #2d3436;
+  --card-muted: #636e72;
+  --body-gradient: linear-gradient(180deg, #25271d 0%, var(--bg) 58%, #0c0d0a 100%);
+  --pattern-layer: linear-gradient(135deg, rgba(244, 211, 94, 0.09) 0 25%, transparent 25% 50%, rgba(127, 176, 105, 0.08) 50% 75%, transparent 75%);
+  --pattern-size: 42px 42px, auto;
+  --danger: #ff7a7a;
+  --shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+}
+
+/* ── Themes ─────────────────────────────────────────────────────────────── */
+
+body[data-theme="midnight"] {
+  --bg: #080b13;
+  --panel: rgba(210, 224, 255, 0.08);
+  --panel-strong: rgba(210, 224, 255, 0.14);
+  --panel-border: rgba(152, 188, 255, 0.22);
+  --text: #edf4ff;
+  --muted: #aab8d8;
+  --accent-one: #88aaff;
+  --accent-two: #69e8d5;
+  --accent-three: #f5c77e;
+  --body-gradient: linear-gradient(180deg, #141c33 0%, #080b13 60%, #03050a 100%);
+}
+
+body[data-theme="paper"] {
+  color-scheme: light;
+  --bg: #f8f0df;
+  --panel: rgba(255, 255, 255, 0.74);
+  --panel-strong: rgba(255, 255, 255, 0.9);
+  --panel-border: rgba(97, 78, 43, 0.18);
+  --text: #2d271b;
+  --muted: #685c45;
+  --accent-one: #b9791b;
+  --accent-two: #3d7c5a;
+  --accent-three: #945f90;
+  --input-bg: rgba(255, 255, 255, 0.9);
+  --body-gradient: linear-gradient(180deg, #fff7e6 0%, #f3dfbd 62%, #ddc092 100%);
+  --shadow: 0 18px 38px rgba(87, 63, 24, 0.2);
+}
+
+body[data-theme="ocean"] {
+  --bg: #07191f;
+  --panel: rgba(195, 244, 255, 0.08);
+  --panel-border: rgba(105, 219, 233, 0.22);
+  --text: #ecfbff;
+  --muted: #a8cfd5;
+  --accent-one: #7ce2d1;
+  --accent-two: #83b6ff;
+  --accent-three: #ffd38a;
+  --body-gradient: linear-gradient(180deg, #123848 0%, #07191f 60%, #021014 100%);
+}
+
+body[data-theme="berry"] {
+  --bg: #1f0b18;
+  --panel: rgba(255, 214, 238, 0.08);
+  --panel-border: rgba(255, 168, 217, 0.22);
+  --text: #fff0f7;
+  --muted: #dab2c4;
+  --accent-one: #ff8dc7;
+  --accent-two: #ffd166;
+  --accent-three: #9bf6ff;
+  --body-gradient: linear-gradient(180deg, #421434 0%, #1f0b18 58%, #10050c 100%);
+}
+
+/* ── Patterns ────────────────────────────────────────────────────────────── */
+
+body[data-pattern="dots"] {
+  --pattern-layer: radial-gradient(circle at center, rgba(255, 255, 255, 0.11) 0 1px, transparent 2px);
+  --pattern-size: 22px 22px, auto;
+}
+
+body[data-pattern="grid"] {
+  --pattern-layer: linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  --pattern-size: 34px 34px, 34px 34px, auto;
+}
+
+body[data-pattern="plain"] {
+  --pattern-layer: linear-gradient(transparent, transparent);
+  --pattern-size: auto, auto;
+}
+
+/* ── Board colors ────────────────────────────────────────────────────────── */
+
+body[data-board="slate"] {
+  --board-light: #d8e1e8;
+  --board-dark: #51606f;
+  --piece-white: #f8fbff;
+  --piece-black: #101820;
+}
+
+body[data-board="sand"] {
+  --board-light: #f0d7a6;
+  --board-dark: #b77946;
+  --piece-white: #fff8df;
+  --piece-black: #2a170c;
+}
+
+body[data-board="contrast"] {
+  --board-light: #f7f7f7;
+  --board-dark: #242424;
+  --piece-white: #ffffff;
+  --piece-black: #000000;
+}
+
+/* ── Piece styles ────────────────────────────────────────────────────────── */
+
+body[data-pieces="woodcut"] {
+  --piece-white: #f5dfb8;
+  --piece-black: #4f2e18;
+}
+
+body[data-pieces="marble"] {
+  --piece-white: #fbfbf5;
+  --piece-black: #1d2530;
+}
+
+body[data-pieces="three_d"] .chess-square.piece-white,
+body[data-pieces="three_d"] .preview-square.piece-white {
+  text-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.55),
+    0 2px 0 rgba(0, 0, 0, 0.40),
+    0 3px 0 rgba(0, 0, 0, 0.25),
+    0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+body[data-pieces="three_d"] .chess-square.piece-black,
+body[data-pieces="three_d"] .preview-square.piece-black {
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.45),
+    0 2px 0 rgba(255, 255, 255, 0.28),
+    0 3px 0 rgba(255, 255, 255, 0.16),
+    0 4px 6px rgba(255, 255, 255, 0.08);
+}

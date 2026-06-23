@@ -1,0 +1,230 @@
+/* ── Shared card backgrounds ─────────────────────────────────────────────── */
+
+.network-card,
+.score-card,
+.game-shell,
+.panel,
+.lobby,
+.appearance-panel,
+.mode-card {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+}
+
+/* ── Network & HUD grids ─────────────────────────────────────────────────── */
+
+.network-grid,
+.hud {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.network-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.hud          { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+.network-card,
+.score-card {
+  border-radius: 8px;
+  padding: 16px 18px;
+}
+
+.network-card .label,
+.score-card .label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.network-card strong,
+.score-card strong {
+  display: block;
+  font-size: 1.7rem;
+}
+
+.network-card p,
+.score-card p {
+  margin: 10px 0 0;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.player-one strong  { color: var(--accent-one); }
+.player-two strong  { color: var(--accent-two); }
+.status-card strong { color: var(--accent-three); }
+
+/* ── Lobby / mode grid ───────────────────────────────────────────────────── */
+
+.lobby {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 2fr 1fr;
+  gap: 14px;
+  padding: 16px;
+  margin-bottom: 18px;
+  border-radius: 8px;
+}
+
+.mode-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.mode-card {
+  display: grid;
+  gap: 16px;
+  min-height: 330px;
+  padding: 24px;
+  border-radius: 22px;
+}
+
+.mode-card h2 {
+  margin: 0;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+}
+
+.mode-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.mode-kicker {
+  color: var(--accent-one);
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+/* ── Form groups ─────────────────────────────────────────────────────────── */
+
+.action-group,
+.bot-group,
+.join-group {
+  display: flex;
+  gap: 12px;
+  align-items: end;
+}
+
+.field {
+  flex: 1;
+}
+
+.field span {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.field small {
+  display: block;
+  min-height: 2.5em;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.28;
+}
+
+input,
+select {
+  width: 100%;
+  border: 1px solid rgba(175, 220, 255, 0.12);
+  border-radius: 8px;
+  padding: 12px 14px;
+  color: var(--text);
+  background: var(--input-bg);
+}
+
+input {
+  text-transform: uppercase;
+  letter-spacing: 0;
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+
+button {
+  border: 0;
+  border-radius: 999px;
+  padding: 12px 18px;
+  font-weight: 700;
+  color: #05111c;
+  background: linear-gradient(135deg, var(--accent-one), var(--accent-two));
+  cursor: pointer;
+  transition: transform 140ms ease, filter 140ms ease, opacity 140ms ease;
+}
+
+button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+#leave-room,
+#pause-match {
+  background: linear-gradient(135deg, #e7c76b, #bf8f3b);
+}
+
+#restart-match {
+  background: linear-gradient(135deg, #ffb4a2, #ff6b6b);
+}
+
+.secondary-button {
+  color: var(--text);
+  background: var(--panel-strong);
+  border: 1px solid var(--panel-border);
+}
+
+.button-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.is-hidden {
+  display: none !important;
+}
+
+/* ── Game hub ────────────────────────────────────────────────────────────── */
+
+.game-hub {
+  margin-bottom: 24px;
+  padding: 22px 20px 24px;
+  border-radius: 20px;
+  background: rgba(255, 247, 223, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.game-hub-header {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.game-hub-title {
+  margin: 0;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.game-hub-hint {
+  margin: 8px 0 0;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  font-size: 0.95rem;
+  color: var(--muted);
+  line-height: 1.45;
+}
