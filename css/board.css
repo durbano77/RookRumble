@@ -80,6 +80,8 @@
   border-radius: 8px;
   border: 1px solid rgba(244, 220, 166, 0.2);
   box-shadow: var(--shadow);
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .chess-square {
@@ -94,6 +96,7 @@
   background: var(--board-light);
   font-size: 3.6rem;
   line-height: 1;
+  touch-action: manipulation;
   transition: box-shadow 120ms ease, filter 120ms ease;
 }
 

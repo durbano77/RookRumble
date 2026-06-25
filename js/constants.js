@@ -1,4 +1,4 @@
-export const appearanceStorageKey = "ezgame-appearance";
+export const appearanceStorageKey = "rook-rumble-appearance";
 
 export const appearanceOptions = {
   theme: ["forest", "midnight", "paper", "ocean", "berry"],

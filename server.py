@@ -19,6 +19,7 @@ MSG_RATE_WINDOW = 1.0
 
 _ip_connections: dict[str, int] = {}
 game_server = GameServer()
+ADS_ENABLED = os.environ.get("ADS_ENABLED", "").lower() in ("1", "true", "yes")
 
 # ── Security middleware ───────────────────────────────────────────────────────
 
@@ -31,13 +32,25 @@ _CSP = (
     "frame-ancestors 'none'"
 )
 
+# Relaxed CSP used when ADS_ENABLED=true — allows AdSense script and iframe domains.
+_CSP_WITH_ADS = (
+    "default-src 'self'; "
+    "script-src 'self' https://pagead2.googlesyndication.com; "
+    "connect-src 'self' ws: wss: https://googleads.g.doubleclick.net; "
+    "frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com; "
+    "img-src 'self' data: https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net; "
+    "object-src 'none'; "
+    "base-uri 'self'; "
+    "frame-ancestors 'none'"
+)
+
 
 @web.middleware
 async def security_headers_middleware(request, handler):
     response = await handler(request)
     if response.prepared:
         return response
-    response.headers["Content-Security-Policy"] = _CSP
+    response.headers["Content-Security-Policy"] = _CSP_WITH_ADS if ADS_ENABLED else _CSP
     response.headers["X-Frame-Options"] = "DENY"
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["Referrer-Policy"] = "no-referrer"

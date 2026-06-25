@@ -53,7 +53,7 @@ const settingsBackButton = document.getElementById("settings-back");
 const stepButtons = [...document.querySelectorAll("[data-step-target]")];
 const stepPanels = [...document.querySelectorAll("[data-step-panel]")];
 
-const appearanceStorageKey = "ezgame-appearance";
+const appearanceStorageKey = "rook-rumble-appearance";
 const appearanceOptions = {
   theme: ["forest", "midnight", "paper", "ocean", "berry"],
   pattern: ["argyle", "dots", "grid", "plain"],

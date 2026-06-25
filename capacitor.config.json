@@ -1,6 +1,6 @@
 {
-  "appId": "com.yourname.ezgame",
-  "appName": "EzGame",
+  "appId": "com.yourname.rookrumble",
+  "appName": "Rook Rumble",
   "webDir": ".",
   "server": {
     "url": "https://YOUR-APP.onrender.com",

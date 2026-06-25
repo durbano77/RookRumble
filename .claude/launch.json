@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "rook-rumble",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["server.py"],
+      "port": 8000,
+      "autoPort": false
+    }
+  ]
+}

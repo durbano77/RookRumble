@@ -10,6 +10,7 @@
   background: var(--panel);
   border: 1px solid var(--panel-border);
   box-shadow: var(--shadow);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
 }
 
@@ -136,6 +137,7 @@ select {
   border: 1px solid rgba(175, 220, 255, 0.12);
   border-radius: 8px;
   padding: 12px 14px;
+  font-size: max(16px, 1em);
   color: var(--text);
   background: var(--input-bg);
 }
@@ -195,6 +197,21 @@ button:disabled {
 
 .is-hidden {
   display: none !important;
+}
+
+/* ── Ad slot (setup step only) ───────────────────────────────────────────── */
+
+.ad-slot {
+  margin: 18px auto 0;
+  max-width: 728px;
+  min-height: 90px;
+  text-align: center;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.ad-slot .adsbygoogle {
+  display: block;
 }
 
 /* ── Game hub ────────────────────────────────────────────────────────────── */

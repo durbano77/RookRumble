@@ -1,6 +1,6 @@
-# EzGame — Casual Chess Club
+# Rook Rumble — Casual Chess Club
 
-EzGame is a casual chess platform: classic chess plus playful variants, playable on LAN (desktop and mobile), against another player or against personality-driven bots. The vibe is a friendly chess clubhouse with chaotic modes—not a serious chess server.
+Rook Rumble is a casual chess platform: classic chess plus playful variants, playable on LAN (desktop and mobile), against another player or against personality-driven bots. The vibe is a friendly chess clubhouse with chaotic modes—not a serious chess server.
 
 **Stack:** vanilla HTML/CSS/JS client + Python (`aiohttp` + `python-chess`) WebSocket server. No build step, no frontend framework, no database.
 
@@ -140,7 +140,7 @@ Per-mode visuals:
 
 ## Appearance system
 
-The UI exposes lightweight client-side appearance controls. Choices are stored in `localStorage` under `ezgame-appearance` and applied as data attributes on `<body>`.
+The UI exposes lightweight client-side appearance controls. Choices are stored in `localStorage` under `rook-rumble-appearance` and applied as data attributes on `<body>`.
 
 | Control | Body attribute | Options |
 |---------|----------------|---------|
@@ -414,7 +414,7 @@ IP detection uses `X-Forwarded-For` (required behind Render's proxy) with a fall
 1. Push the repo to GitHub.
 2. Go to [render.com](https://render.com), create an account, and click **New → Blueprint**.
 3. Connect the GitHub repo — Render reads `render.yaml` and auto-configures the service.
-4. Deploy. Render gives you a URL like `https://ezgame-xxxx.onrender.com`.
+4. Deploy. Render gives you a URL like `https://rook-rumble-xxxx.onrender.com`.
 
 The server already reads `PORT` from the environment and serves all static files — no extra config needed.
 
@@ -484,4 +484,4 @@ npx cap sync
 
 ### App ID
 
-The default `appId` in `capacitor.config.json` is `com.yourname.ezgame`. Change this to a reverse-domain identifier you control (e.g. `com.marco.ezgame`) before running `npx cap add android` — it cannot be changed after the app is published.
+The default `appId` in `capacitor.config.json` is `com.yourname.rookrumble`. Change this to a reverse-domain identifier you control (e.g. `com.marco.rookrumble`) before running `npx cap add android` — it cannot be changed after the app is published.

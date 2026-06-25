@@ -2,9 +2,21 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EzGame - Casual Chess Club</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="theme-color" content="#151711" />
+    <title>Rook Rumble</title>
     <link rel="stylesheet" href="styles.css" />
+    <!--
+      Google AdSense — monetization (setup step only).
+      Before going live:
+        1. Replace both ca-pub-XXXXXXXXXXXXXXXX with your AdSense publisher ID.
+        2. Replace XXXXXXXXXX with your ad-slot ID (from AdSense › Ads › By ad unit).
+        3. Set ADS_ENABLED=true on the server (adjusts the Content-Security-Policy).
+        4. AdSense requires your site to be publicly accessible; it will not serve on localhost.
+    -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
   </head>
   <body data-theme="forest" data-board="classic" data-pieces="classic" data-pattern="argyle">
     <main class="app">
@@ -13,7 +25,7 @@
       </button>
 
       <section class="hero">
-        <p class="eyebrow">EzGame</p>
+        <p class="eyebrow">Rook Rumble</p>
         <h1>Casual Chess Club</h1>
         <p class="subtitle">
           Classic chess and playful variants for local rooms, phones, and bot matches.
@@ -84,6 +96,15 @@
             </div>
           </article>
         </section>
+
+        <div class="ad-slot" id="ad-slot-setup" aria-label="Advertisement">
+          <ins class="adsbygoogle"
+               style="display:block"
+               data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+               data-ad-slot="XXXXXXXXXX"
+               data-ad-format="auto"
+               data-full-width-responsive="true"></ins>
+        </div>
       </section>
 
       <section class="step-panel" id="games-panel" data-step-panel="games">
@@ -271,5 +292,6 @@
     </main>
 
     <script type="module" src="/js/main.js"></script>
+    <script src="/js/ads.js"></script>
   </body>
 </html>
