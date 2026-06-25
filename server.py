@@ -133,6 +133,14 @@ async def ads_txt_handler(_request):
     return await serve_file("ads.txt", "text/plain")
 
 
+async def favicon_handler(_request):
+    return web.Response(body=(ROOT / "favicon.ico").read_bytes(), content_type="image/x-icon")
+
+
+async def apple_touch_icon_handler(_request):
+    return web.Response(body=(ROOT / "apple-touch-icon.png").read_bytes(), content_type="image/png")
+
+
 async def manifest_handler(_request):
     return await serve_file("manifest.json", "application/manifest+json")
 
@@ -163,6 +171,8 @@ def make_app():
     app.router.add_get("/ws", websocket_handler)
     app.router.add_get("/styles.css", css_handler)
     app.router.add_get("/ads.txt", ads_txt_handler)
+    app.router.add_get("/favicon.ico", favicon_handler)
+    app.router.add_get("/apple-touch-icon.png", apple_touch_icon_handler)
     app.router.add_get("/manifest.json", manifest_handler)
     app.router.add_get("/sw.js", sw_handler)
     app.router.add_get("/.well-known/assetlinks.json", assetlinks_handler)

@@ -14,7 +14,8 @@ const SHELL = [
   '/js/main.js',
   '/js/ads.js',
   '/manifest.json',
-  '/icons/icon.svg',
+  '/favicon.ico',
+  '/icons/icon-192.png',
 ];
 
 self.addEventListener('install', (e) => {
