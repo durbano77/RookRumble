@@ -1,7 +1,3 @@
-export const serverUrlEl = document.getElementById("server-url");
-export const roomCodeDisplayEl = document.getElementById("room-code-display");
-export const connectionStateEl = document.getElementById("connection-state");
-export const connectionHintEl = document.getElementById("connection-hint");
 export const roomCodeInput = document.getElementById("room-code-input");
 export const createRoomButton = document.getElementById("create-room");
 export const playBotButton = document.getElementById("play-bot");

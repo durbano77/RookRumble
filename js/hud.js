@@ -1,5 +1,4 @@
 import {
-  roomCodeDisplayEl, connectionStateEl, connectionHintEl,
   score1El, score2El, player1StateEl, player2StateEl,
   roleDisplayEl, roleHintEl, statusEl,
   startMatchButton, pauseMatchButton, restartMatchButton,
@@ -184,12 +183,6 @@ export function updateButtons() {
 
 export function updateHud() {
   const game = state.game;
-
-  roomCodeDisplayEl.textContent = state.roomCode || "----";
-  connectionStateEl.textContent = state.connectionState === "connected" ? "Connected" : "Disconnected";
-  connectionHintEl.textContent = state.connectionState === "connected"
-    ? "Chess room sync is active."
-    : "Trying to reach the chess server.";
 
   score1El.textContent = "White";
   score2El.textContent = state.bot.enabled ? botLabel() : "Black";

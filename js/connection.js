@@ -1,4 +1,4 @@
-import { promotionPanelEl, serverUrlEl, statusEl } from "./dom.js";
+import { promotionPanelEl, statusEl } from "./dom.js";
 import { state, websocketUrl, send } from "./state.js";
 import { defaultVariants, defaultBotDifficulties } from "./constants.js";
 import { updateHud } from "./hud.js";
@@ -96,4 +96,3 @@ export function connectSocket() {
   });
 }
 
-serverUrlEl.textContent = window.location.origin;
