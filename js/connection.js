@@ -11,6 +11,8 @@ export function setConnectionState(nextState) {
 }
 
 export function applySync(payload) {
+  const prevSelectedGame = state.selectedGame;
+
   state.roomCode = payload.roomCode || "";
   state.selectedGame = payload.selectedGame || "none";
   state.availableGames = payload.availableGames || defaultVariants;
@@ -20,13 +22,18 @@ export function applySync(payload) {
   state.botDifficulties = payload.botDifficulties || defaultBotDifficulties;
   state.players = payload.players || state.players;
   state.game = payload.game || state.game;
+  state.inQueue = Boolean(payload.queued);
 
   if (!state.roomCode) {
-    state.pendingStepAfterRoom = null;
+    if (!state.inQueue) {
+      state.pendingStepAfterRoom = null;
+    }
     setStep("setup");
   } else if (state.pendingStepAfterRoom) {
     setStep(state.pendingStepAfterRoom);
     state.pendingStepAfterRoom = null;
+  } else if (state.uiStep === "games" && prevSelectedGame === "none" && state.selectedGame !== "none") {
+    setStep("play");
   }
 
   if (state.game.gameState !== "playing") {

@@ -7,12 +7,66 @@ import {
   createRoomButton, playBotButton, botDifficultySelect, joinRoomButton, leaveRoomButton,
   menuExitMainButton, menuExitGamesButton,
   overlayKickerEl, overlayTitleEl, overlayTextEl, overlayActionButton, overlayEl,
+  clock0El, clock1El,
+  quickMatchButton, quickMatchGroupEl, matchmakingRowEl,
 } from "./dom.js";
 import {
   state, playerColor, currentGameIsActive, variantTitle, botLabel,
 } from "./state.js";
 import { renderVariantPicker, renderBotSelector } from "./variants.js";
 import { setStep } from "./menu.js";
+
+// ── Clock ─────────────────────────────────────────────────────────────────────
+
+let clockInterval = null;
+let clockData = null;
+
+function formatClock(seconds) {
+  const s = Math.max(0, Math.floor(seconds));
+  const m = Math.floor(s / 60);
+  const rem = s % 60;
+  return `${m}:${rem.toString().padStart(2, "0")}`;
+}
+
+function renderClocks() {
+  if (!clockData) return;
+  const { remaining, receivedAt } = clockData;
+  const elapsed = (Date.now() - receivedAt) / 1000;
+  const activeIdx = state.game.turn === "white" ? 0 : 1;
+
+  const times = [...remaining];
+  if (state.game.gameState === "playing") {
+    times[activeIdx] = Math.max(0, times[activeIdx] - elapsed);
+  }
+
+  [clock0El, clock1El].forEach((el, i) => {
+    el.textContent = formatClock(times[i]);
+    el.classList.toggle("clock-urgent", times[i] < 30);
+    el.classList.toggle("clock-active", state.game.gameState === "playing" && i === activeIdx);
+  });
+}
+
+function updateClockDisplay(clock) {
+  clockData = clock ? { ...clock, receivedAt: Date.now() } : null;
+
+  if (clock) {
+    clock0El.classList.remove("is-hidden");
+    clock1El.classList.remove("is-hidden");
+    if (!clockInterval) {
+      clockInterval = setInterval(renderClocks, 100);
+    }
+    renderClocks();
+  } else {
+    clock0El.classList.add("is-hidden");
+    clock1El.classList.add("is-hidden");
+    if (clockInterval) {
+      clearInterval(clockInterval);
+      clockInterval = null;
+    }
+  }
+}
+
+// ── Overlay ───────────────────────────────────────────────────────────────────
 
 export function showOverlay({ kicker, title, text, actionLabel, hidden, disabled = false }) {
   if (hidden) {
@@ -100,12 +154,17 @@ export function updateButtons() {
   const bothConnected = state.players.every((p) => p.connected);
   const hostReady = connected && inRoom && state.isHost;
   const hasVariant = state.selectedGame !== "none";
+  const busy = !connected || state.inQueue;
 
   renderBotSelector();
-  createRoomButton.disabled = !connected;
-  playBotButton.disabled = !connected;
-  botDifficultySelect.disabled = !connected;
-  joinRoomButton.disabled = !connected;
+  createRoomButton.disabled = busy;
+  playBotButton.disabled = busy;
+  botDifficultySelect.disabled = busy;
+  joinRoomButton.disabled = busy;
+  quickMatchButton.disabled = busy;
+  quickMatchGroupEl.classList.toggle("is-hidden", state.inQueue);
+  matchmakingRowEl.classList.toggle("is-hidden", !state.inQueue);
+
   leaveRoomButton.disabled = !inRoom;
   startMatchButton.disabled =
     !hostReady || !bothConnected || !hasVariant || currentGameIsActive();
@@ -156,6 +215,7 @@ export function updateHud() {
   }
 
   statusEl.textContent = game.message || "Choose a variant to begin.";
+  updateClockDisplay(game.clock || null);
   updateButtons();
   syncOverlay();
 }

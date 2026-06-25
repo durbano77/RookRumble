@@ -82,6 +82,15 @@
               </label>
               <button id="join-room" type="button">Join Room</button>
             </div>
+            <hr class="mode-divider" />
+            <div class="quick-match-group" id="quick-match-group">
+              <button id="quick-match" type="button">Quick Match</button>
+              <small class="field-hint">Find a random opponent automatically.</small>
+            </div>
+            <div class="matchmaking-row is-hidden" id="matchmaking-row">
+              <small class="field-hint">Searching for an opponent…</small>
+              <button id="cancel-queue" class="secondary-button" type="button">Cancel</button>
+            </div>
           </article>
 
           <article class="mode-card">
@@ -143,11 +152,13 @@
             <span class="label">White</span>
             <strong id="score1">White</strong>
             <p id="player1-state">Waiting</p>
+            <div class="player-clock is-hidden" id="clock0">—</div>
           </article>
           <article class="score-card player-two">
             <span class="label">Black</span>
             <strong id="score2">Black</strong>
             <p id="player2-state">Waiting</p>
+            <div class="player-clock is-hidden" id="clock1">—</div>
           </article>
           <article class="score-card status-card">
             <span class="label">You Are</span>
@@ -204,6 +215,54 @@
           </div>
         </section>
       </section>
+
+      <div class="menu-modal is-hidden" id="game-select-modal" role="dialog" aria-modal="true" aria-labelledby="game-modal-title">
+        <div class="menu-card">
+          <div class="menu-view">
+            <header class="menu-header">
+              <div>
+                <p class="mode-kicker" id="game-modal-kicker"></p>
+                <h2 id="game-modal-title">Set Timer</h2>
+              </div>
+              <button class="icon-button" id="game-modal-close" type="button" aria-label="Cancel">×</button>
+            </header>
+            <p class="game-modal-desc" id="game-modal-desc"></p>
+            <div class="timer-grid">
+              <button class="timer-option is-selected" type="button" data-minutes="" data-increment="">
+                <span class="timer-label">No Timer</span>
+                <span class="timer-sub">Unlimited</span>
+              </button>
+              <button class="timer-option" type="button" data-minutes="1" data-increment="0">
+                <span class="timer-label">1 min</span>
+                <span class="timer-sub">Bullet</span>
+              </button>
+              <button class="timer-option" type="button" data-minutes="1" data-increment="1">
+                <span class="timer-label">1 + 1</span>
+                <span class="timer-sub">Bullet</span>
+              </button>
+              <button class="timer-option" type="button" data-minutes="3" data-increment="0">
+                <span class="timer-label">3 min</span>
+                <span class="timer-sub">Blitz</span>
+              </button>
+              <button class="timer-option" type="button" data-minutes="3" data-increment="1">
+                <span class="timer-label">3 + 1</span>
+                <span class="timer-sub">Blitz</span>
+              </button>
+              <button class="timer-option" type="button" data-minutes="5" data-increment="0">
+                <span class="timer-label">5 min</span>
+                <span class="timer-sub">Blitz</span>
+              </button>
+              <button class="timer-option" type="button" data-minutes="10" data-increment="0">
+                <span class="timer-label">10 min</span>
+                <span class="timer-sub">Rapid</span>
+              </button>
+            </div>
+            <div class="menu-actions" style="margin-top: 16px;">
+              <button id="game-modal-confirm" type="button">Play</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div class="menu-modal is-hidden" id="menu-modal" role="dialog" aria-modal="true" aria-labelledby="menu-title">
         <div class="menu-card">

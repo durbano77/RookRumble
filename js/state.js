@@ -23,6 +23,7 @@ export const state = {
   pendingPromotion: null,
   uiStep: "setup",
   pendingStepAfterRoom: null,
+  inQueue: false,
 };
 
 export function websocketUrl() {

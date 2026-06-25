@@ -59,11 +59,13 @@ class Room:
                 return index
         return None
 
-    def select_game(self, variant_id):
+    def select_game(self, variant_id, timer_config=None):
         if variant_id not in VARIANTS:
             return False
         self.selected_game = variant_id
         self.chess_game = VARIANT_CLASSES[variant_id](variant_id)
+        if timer_config:
+            self.chess_game.set_timer(timer_config)
         self.sync_presence()
         return True
 

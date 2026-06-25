@@ -55,3 +55,18 @@ export const menuCreditsView = document.getElementById("menu-credits-view");
 export const creditsBackButton = document.getElementById("credits-back");
 export const stepButtons = [...document.querySelectorAll("[data-step-target]")];
 export const stepPanels = [...document.querySelectorAll("[data-step-panel]")];
+
+export const clock0El = document.getElementById("clock0");
+export const clock1El = document.getElementById("clock1");
+
+export const gameSelectModal = document.getElementById("game-select-modal");
+export const gameModalClose = document.getElementById("game-modal-close");
+export const gameModalKicker = document.getElementById("game-modal-kicker");
+export const gameModalDesc = document.getElementById("game-modal-desc");
+export const timerGrid = document.querySelector(".timer-grid");
+export const gameModalConfirm = document.getElementById("game-modal-confirm");
+
+export const quickMatchButton = document.getElementById("quick-match");
+export const cancelQueueButton = document.getElementById("cancel-queue");
+export const quickMatchGroupEl = document.getElementById("quick-match-group");
+export const matchmakingRowEl = document.getElementById("matchmaking-row");

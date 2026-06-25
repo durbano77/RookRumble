@@ -2,7 +2,7 @@ import asyncio
 import random
 import string
 
-from .registry import BOT_DIFFICULTIES
+from .registry import BOT_DIFFICULTIES, lobby_sync_payload
 from .room import Room
 
 MAX_ROOMS = 1000
@@ -11,6 +11,7 @@ MAX_ROOMS = 1000
 class GameServer:
     def __init__(self):
         self.rooms: dict[str, Room] = {}
+        self.matchmaking_queue: list = []  # waiting WebSocket connections
 
     def create_room_code(self):
         while True:
@@ -19,6 +20,7 @@ class GameServer:
                 return code
 
     async def remove_from_room(self, ws):
+        self.matchmaking_queue = [q for q in self.matchmaking_queue if q is not ws]
         room = getattr(ws, "room", None)
         if room is None:
             return
@@ -88,6 +90,45 @@ class GameServer:
         room.sync_presence()
         await room.broadcast_sync()
 
+    async def join_queue(self, ws):
+        await self.remove_from_room(ws)
+        # Purge closed connections from queue
+        self.matchmaking_queue = [q for q in self.matchmaking_queue if not q.closed]
+
+        if self.matchmaking_queue:
+            opponent = self.matchmaking_queue.pop(0)
+            if len(self.rooms) >= MAX_ROOMS:
+                await ws.send_json({"type": "error", "message": "Server is at capacity."})
+                return
+            code = self.create_room_code()
+            room = Room(code)
+            room.clients[0] = opponent  # first-in-queue is host (white)
+            room.clients[1] = ws
+            opponent.room = room
+            ws.room = room
+            self.rooms[code] = room
+            room.sync_presence()
+            await room.broadcast_sync()
+        else:
+            self.matchmaking_queue.append(ws)
+            payload = lobby_sync_payload("Searching for an opponent...")
+            payload["queued"] = True
+            await ws.send_json(payload)
+
+    async def leave_queue(self, ws):
+        self.matchmaking_queue = [q for q in self.matchmaking_queue if q is not ws]
+        payload = lobby_sync_payload("Cancelled matchmaking.")
+        payload["queued"] = False
+        await ws.send_json(payload)
+
+    async def run_clock_checks(self):
+        while True:
+            await asyncio.sleep(2)
+            for room in list(self.rooms.values()):
+                game = room.active_game()
+                if game and game.check_timeout():
+                    await room.broadcast_sync()
+
     async def play_bot_turns(self, room):
         active_game = room.active_game()
         if not room.bot_enabled() or active_game is None:
@@ -119,6 +160,14 @@ class GameServer:
             return
 
         message_type = payload.get("type")
+
+        if message_type == "join_queue":
+            await self.join_queue(ws)
+            return
+
+        if message_type == "leave_queue":
+            await self.leave_queue(ws)
+            return
 
         if message_type == "create_room":
             await self.create_room(ws)
@@ -159,7 +208,14 @@ class GameServer:
             if active_game and active_game.game_state in {"playing", "paused"}:
                 await ws.send_json({"type": "error", "message": "Finish or restart before changing variants."})
                 return
-            if not room.select_game(str(payload.get("game", ""))):
+            timer_raw = payload.get("timer")
+            timer = None
+            if isinstance(timer_raw, dict):
+                minutes = timer_raw.get("minutes")
+                increment = timer_raw.get("increment", 0)
+                if isinstance(minutes, (int, float)) and 0 < minutes <= 60:
+                    timer = {"minutes": int(minutes), "increment": max(0, int(increment))}
+            if not room.select_game(str(payload.get("game", "")), timer):
                 await ws.send_json({"type": "error", "message": "Choose a chess variant."})
                 return
             await room.broadcast_sync()

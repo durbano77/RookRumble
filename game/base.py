@@ -1,4 +1,5 @@
 import random
+import time
 
 import chess
 
@@ -19,6 +20,9 @@ class BaseGame:
         self.last_move = None
         self.move_count = 0
         self.move_history = []
+        self.timer_config = None          # {"minutes": int, "increment": int} or None
+        self.remaining = [None, None]     # seconds remaining for [white, black]
+        self.turn_started = None          # monotonic timestamp when current turn began
 
     # ── Lifecycle ────────────────────────────────────────────────────────────
 
@@ -27,6 +31,15 @@ class BaseGame:
         self.last_move = None
         self.move_count = 0
         self.move_history = []
+        self.turn_started = None
+        if self.timer_config:
+            initial = float(self.timer_config["minutes"] * 60)
+            self.remaining = [initial, initial]
+
+    def set_timer(self, config):
+        self.timer_config = config
+        initial = float(config["minutes"] * 60)
+        self.remaining = [initial, initial]
 
     def set_waiting(self, message="Waiting for another player to join this room."):
         self.reset_board()
@@ -41,6 +54,8 @@ class BaseGame:
     def start(self):
         self.reset_board()
         self.game_state = "playing"
+        if self.timer_config:
+            self.turn_started = time.monotonic()
         self.update_status()
 
     def restart(self):
@@ -53,9 +68,63 @@ class BaseGame:
         if self.game_state == "playing":
             self.game_state = "paused"
             self.message = "Game paused by the host."
+            if self.timer_config and self.turn_started is not None:
+                elapsed = time.monotonic() - self.turn_started
+                active = self.player_index_for_turn()
+                self.remaining[active] = max(0.0, self.remaining[active] - elapsed)
+                self.turn_started = None
         elif self.game_state == "paused":
             self.game_state = "playing"
+            if self.timer_config:
+                self.turn_started = time.monotonic()
             self.update_status()
+
+    # ── Timer ────────────────────────────────────────────────────────────────
+
+    def _apply_move_clock(self, mover_index):
+        if self.timer_config is None or self.turn_started is None:
+            return
+        now = time.monotonic()
+        elapsed = now - self.turn_started
+        increment = self.timer_config.get("increment", 0)
+        self.remaining[mover_index] = max(0.0, self.remaining[mover_index] - elapsed + increment)
+        if self.remaining[mover_index] <= 0:
+            loser = "White" if mover_index == 0 else "Black"
+            winner = "Black" if mover_index == 0 else "White"
+            self.game_state = "gameover"
+            self.message = f"{loser} ran out of time. {winner} wins."
+            self.turn_started = None
+        else:
+            self.turn_started = now
+
+    def check_timeout(self):
+        if self.timer_config is None or self.turn_started is None or self.game_state != "playing":
+            return False
+        active = self.player_index_for_turn()
+        elapsed = time.monotonic() - self.turn_started
+        if self.remaining[active] - elapsed <= 0:
+            loser = "White" if active == 0 else "Black"
+            winner = "Black" if active == 0 else "White"
+            self.remaining[active] = 0.0
+            self.game_state = "gameover"
+            self.message = f"{loser} ran out of time. {winner} wins."
+            self.turn_started = None
+            return True
+        return False
+
+    def clock_snapshot(self):
+        if self.timer_config is None:
+            return None
+        remaining = list(self.remaining)
+        if self.game_state == "playing" and self.turn_started is not None:
+            active = self.player_index_for_turn()
+            elapsed = time.monotonic() - self.turn_started
+            remaining[active] = max(0.0, remaining[active] - elapsed)
+        return {
+            "remaining": remaining,
+            "initial": self.timer_config["minutes"] * 60,
+            "increment": self.timer_config.get("increment", 0),
+        }
 
     # ── Player helpers ───────────────────────────────────────────────────────
 
@@ -143,6 +212,7 @@ class BaseGame:
         return list(self.board.legal_moves)
 
     def push_legal_move(self, move):
+        mover_index = self.player_index_for_turn()
         self.board.push(move)
         self.move_count += 1
         self.last_move = {
@@ -152,7 +222,9 @@ class BaseGame:
         }
         self.move_history.append(move.uci())
         self._after_push(move)
-        self.update_status()
+        self._apply_move_clock(mover_index)
+        if self.game_state != "gameover":
+            self.update_status()
 
     def _after_push(self, move):
         pass
@@ -409,4 +481,5 @@ class BaseGame:
             "result": self.board.result(claim_draw=True) if outcome else None,
             "termination": str(outcome.termination.name).lower() if outcome else None,
             "variant": self.variant_payload(),
+            "clock": self.clock_snapshot(),
         }

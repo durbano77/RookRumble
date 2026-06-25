@@ -1,9 +1,48 @@
-import { variantPickerEl, variantPickerHintEl, botDifficultySelect, botDescriptionEl } from "./dom.js";
+import {
+  variantPickerEl, variantPickerHintEl, botDifficultySelect, botDescriptionEl,
+  gameSelectModal, gameModalKicker, gameModalDesc, timerGrid,
+} from "./dom.js";
 import { defaultBotDifficulties, variantCardMeta, defaultVariantCardMeta } from "./constants.js";
 import { state, send, currentGameIsActive, variantTitle } from "./state.js";
 
+let pendingVariantId = null;
+
 export function variantCardVisual(variantId) {
   return variantCardMeta[variantId] || defaultVariantCardMeta;
+}
+
+export function openGameSelectModal(variantId) {
+  const variant = state.availableGames.find((v) => v.id === variantId);
+  if (!variant) return;
+  pendingVariantId = variantId;
+  gameModalKicker.textContent = variant.label;
+  gameModalDesc.textContent = variant.description;
+  for (const btn of timerGrid.querySelectorAll(".timer-option")) {
+    btn.classList.toggle("is-selected", btn.dataset.minutes === "");
+  }
+  gameSelectModal.classList.remove("is-hidden");
+}
+
+export function confirmGameSelect() {
+  if (!pendingVariantId) return;
+  const selected = timerGrid.querySelector(".timer-option.is-selected");
+  let timer = null;
+  if (selected && selected.dataset.minutes !== "") {
+    timer = {
+      minutes: parseInt(selected.dataset.minutes, 10),
+      increment: parseInt(selected.dataset.increment || "0", 10),
+    };
+  }
+  send("select_game", { game: pendingVariantId, timer });
+  gameSelectModal.classList.add("is-hidden");
+  pendingVariantId = null;
+  // Navigation to play step happens automatically via applySync
+  // when the server confirms the selection and state.selectedGame updates.
+}
+
+export function closeGameSelectModal() {
+  gameSelectModal.classList.add("is-hidden");
+  pendingVariantId = null;
 }
 
 export function updateVariantPickerHint() {
@@ -22,7 +61,7 @@ export function updateVariantPickerHint() {
     return;
   }
   if (state.selectedGame === "none") {
-    variantPickerHintEl.textContent = "Tap a card to choose what you are playing, then continue to the board.";
+    variantPickerHintEl.textContent = "Tap a card to choose your game and timer, then head to the board.";
     return;
   }
   variantPickerHintEl.textContent = `${variantTitle()} selected. Continue to the board or pick another card.`;
@@ -81,7 +120,7 @@ export function renderVariantPicker() {
 
     button.append(art, body);
     button.addEventListener("click", () => {
-      send("select_game", { game: variant.id });
+      openGameSelectModal(variant.id);
     });
     variantPickerEl.append(button);
   }

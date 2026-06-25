@@ -135,8 +135,13 @@ async def ads_txt_handler(_request):
 
 # ── App factory ───────────────────────────────────────────────────────────────
 
+async def _on_startup(app):
+    asyncio.create_task(game_server.run_clock_checks())
+
+
 def make_app():
     app = web.Application(middlewares=[security_headers_middleware])
+    app.on_startup.append(_on_startup)
     app.router.add_get("/", index_handler)
     app.router.add_get("/index.html", index_handler)
     app.router.add_get("/ws", websocket_handler)

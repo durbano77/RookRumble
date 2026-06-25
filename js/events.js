@@ -9,10 +9,12 @@ import {
   menuOpenCreditsButton, creditsBackButton,
   menuModal, themeSelect, patternSelect, boardSelect, pieceSelect,
   stepButtons,
+  gameSelectModal, gameModalClose, gameModalConfirm, timerGrid,
+  quickMatchButton, cancelQueueButton,
 } from "./dom.js";
 import { state, send } from "./state.js";
 import { applyAppearance } from "./appearance.js";
-import { renderBotSelector } from "./variants.js";
+import { renderBotSelector, confirmGameSelect, closeGameSelectModal } from "./variants.js";
 import { setStep } from "./menu.js";
 import { openMenu, closeMenu, showMenuView, exitToMainMenu, exitToGameSelection } from "./menu.js";
 
@@ -117,5 +119,30 @@ menuModal.addEventListener("click", (event) => {
 });
 
 window.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && !menuModal.classList.contains("is-hidden")) closeMenu();
+  if (event.key === "Escape") {
+    if (!menuModal.classList.contains("is-hidden")) closeMenu();
+    else if (!gameSelectModal.classList.contains("is-hidden")) closeGameSelectModal();
+  }
 });
+
+// Timer selection (event delegation on the grid)
+timerGrid.addEventListener("click", (event) => {
+  const btn = event.target.closest(".timer-option");
+  if (!btn) return;
+  for (const opt of timerGrid.querySelectorAll(".timer-option")) {
+    opt.classList.toggle("is-selected", opt === btn);
+  }
+});
+
+gameModalClose.addEventListener("click", () => { closeGameSelectModal(); });
+gameModalConfirm.addEventListener("click", () => { confirmGameSelect(); });
+gameSelectModal.addEventListener("click", (event) => {
+  if (event.target === gameSelectModal) closeGameSelectModal();
+});
+
+// Matchmaking
+quickMatchButton.addEventListener("click", () => {
+  state.pendingStepAfterRoom = "games";
+  send("join_queue");
+});
+cancelQueueButton.addEventListener("click", () => { send("leave_queue"); });
