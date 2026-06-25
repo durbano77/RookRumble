@@ -129,6 +129,10 @@ async def css_handler(_request):
     return await serve_file("styles.css", "text/css")
 
 
+async def ads_txt_handler(_request):
+    return await serve_file("ads.txt", "text/plain")
+
+
 # ── App factory ───────────────────────────────────────────────────────────────
 
 def make_app():
@@ -137,6 +141,7 @@ def make_app():
     app.router.add_get("/index.html", index_handler)
     app.router.add_get("/ws", websocket_handler)
     app.router.add_get("/styles.css", css_handler)
+    app.router.add_get("/ads.txt", ads_txt_handler)
     app.router.add_static("/js", ROOT / "js")
     app.router.add_static("/css", ROOT / "css")
     return app
