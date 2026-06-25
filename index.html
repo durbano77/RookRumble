@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="/css/overlay.css" />
     <link rel="stylesheet" href="/css/menu.css" />
     <link rel="stylesheet" href="/css/responsive.css" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="icon" href="/icons/icon.svg" type="image/svg+xml" />
     <!--
       Google AdSense — monetization (setup step only).
       Still needed:
@@ -387,5 +389,10 @@
 
     <script type="module" src="/js/main.js"></script>
     <script src="/js/ads.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      }
+    </script>
   </body>
 </html>

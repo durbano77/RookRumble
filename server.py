@@ -133,6 +133,22 @@ async def ads_txt_handler(_request):
     return await serve_file("ads.txt", "text/plain")
 
 
+async def manifest_handler(_request):
+    return await serve_file("manifest.json", "application/manifest+json")
+
+
+async def sw_handler(_request):
+    return web.Response(
+        text=(ROOT / "sw.js").read_text(),
+        content_type="application/javascript",
+        headers={"Service-Worker-Allowed": "/"},
+    )
+
+
+async def assetlinks_handler(_request):
+    return await serve_file(".well-known/assetlinks.json", "application/json")
+
+
 # ── App factory ───────────────────────────────────────────────────────────────
 
 async def _on_startup(app):
@@ -147,8 +163,12 @@ def make_app():
     app.router.add_get("/ws", websocket_handler)
     app.router.add_get("/styles.css", css_handler)
     app.router.add_get("/ads.txt", ads_txt_handler)
+    app.router.add_get("/manifest.json", manifest_handler)
+    app.router.add_get("/sw.js", sw_handler)
+    app.router.add_get("/.well-known/assetlinks.json", assetlinks_handler)
     app.router.add_static("/js", ROOT / "js")
     app.router.add_static("/css", ROOT / "css")
+    app.router.add_static("/icons", ROOT / "icons")
     return app
 
 
