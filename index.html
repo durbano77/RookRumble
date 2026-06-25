@@ -220,6 +220,7 @@
               <button id="menu-exit-main" type="button">Exit To Main Menu</button>
               <button id="menu-exit-games" type="button">Exit To Game Selection</button>
               <button id="menu-open-settings" type="button">Settings</button>
+              <button id="menu-open-credits" class="secondary-button" type="button">Credits</button>
             </div>
           </div>
 
@@ -293,6 +294,34 @@
                 </div>
               </div>
             </div>
+          </div>
+          <div class="menu-view is-hidden" id="menu-credits-view">
+            <header class="menu-header">
+              <div>
+                <p class="mode-kicker">About</p>
+                <h2>Credits</h2>
+              </div>
+              <button class="icon-button" id="credits-back" type="button" aria-label="Back to menu">←</button>
+            </header>
+            <ul class="credits-list">
+              <li class="credits-entry">
+                <strong class="credits-title">Thress / Anarchy Chess</strong>
+                <p class="credits-body">
+                  The Thress game mode is inspired by the Anarchy Chess format created by DougDoug.
+                  The rule-card concept and name are adapted from
+                  <a href="https://github.com/Ryukaki/ThressGame" target="_blank" rel="noopener noreferrer">github.com/Ryukaki/ThressGame</a>
+                  by Ryukaki. Go check out their work.
+                </p>
+              </li>
+              <li class="credits-entry">
+                <strong class="credits-title">Chess Engine</strong>
+                <p class="credits-body">
+                  Move validation and variant rules powered by
+                  <a href="https://github.com/niklasf/python-chess" target="_blank" rel="noopener noreferrer">python-chess</a>
+                  by Niklas Fiekas.
+                </p>
+              </li>
+            </ul>
           </div>
         </div>
       </div>

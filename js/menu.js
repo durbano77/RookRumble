@@ -1,4 +1,4 @@
-import { menuModal, menuMainView, menuSettingsView, stepPanels, stepButtons } from "./dom.js";
+import { menuModal, menuMainView, menuSettingsView, menuCreditsView, stepPanels, stepButtons } from "./dom.js";
 import { state, send, currentGameIsActive } from "./state.js";
 
 export function canShowStep(step) {
@@ -34,9 +34,9 @@ export function closeMenu() {
 }
 
 export function showMenuView(view) {
-  const showSettings = view === "settings";
-  menuMainView.classList.toggle("is-hidden", showSettings);
-  menuSettingsView.classList.toggle("is-hidden", !showSettings);
+  menuMainView.classList.toggle("is-hidden", view !== "main");
+  menuSettingsView.classList.toggle("is-hidden", view !== "settings");
+  menuCreditsView.classList.toggle("is-hidden", view !== "credits");
 }
 
 export function exitToMainMenu() {

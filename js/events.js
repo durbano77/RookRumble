@@ -5,8 +5,9 @@ import {
   overlayActionButton, continueToPlayButton, backToSetupButton,
   playBackToGamesButton, playBackToSetupButton,
   menuButton, closeMenuButton, menuExitMainButton, menuExitGamesButton,
-  menuOpenSettingsButton, settingsBackButton, menuModal,
-  themeSelect, patternSelect, boardSelect, pieceSelect,
+  menuOpenSettingsButton, settingsBackButton,
+  menuOpenCreditsButton, creditsBackButton,
+  menuModal, themeSelect, patternSelect, boardSelect, pieceSelect,
   stepButtons,
 } from "./dom.js";
 import { state, send } from "./state.js";
@@ -108,6 +109,8 @@ menuExitMainButton.addEventListener("click", () => { exitToMainMenu(); });
 menuExitGamesButton.addEventListener("click", () => { exitToGameSelection(); });
 menuOpenSettingsButton.addEventListener("click", () => { showMenuView("settings"); });
 settingsBackButton.addEventListener("click", () => { showMenuView("main"); });
+menuOpenCreditsButton.addEventListener("click", () => { showMenuView("credits"); });
+creditsBackButton.addEventListener("click", () => { showMenuView("main"); });
 
 menuModal.addEventListener("click", (event) => {
   if (event.target === menuModal) closeMenu();
