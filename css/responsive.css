@@ -13,7 +13,7 @@
   }
 
   .chess-board {
-    width: min(96vw, 640px);
+    width: min(100%, 640px);
   }
 
   .mutator-options {
@@ -65,7 +65,7 @@
   .game-card-icon { font-size: 2.6rem; }
 
   .chess-board {
-    width: min(100vw, 640px);
+    width: 100%;
     border-radius: 0;
   }
 

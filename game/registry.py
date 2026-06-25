@@ -55,8 +55,8 @@ BOT_DIFFICULTIES = {
         "greed": 0.82,
     },
     "dougdoug": {
-        "label": "DougDoug Chaos",
-        "description": "Unofficially inspired by streamer-brain chess: fearless, confused, funny.",
+        "label": "Chaos Gremlin",
+        "description": "Fearless, confused, and kind of hilarious. Treats every move as a speedrun.",
         "skill": 0.2,
         "chaos": 0.96,
         "aggression": 0.78,
@@ -82,8 +82,8 @@ BOT_DIFFICULTIES = {
         "style": "attacker",
     },
     "gotham": {
-        "label": "Gotham Tactics",
-        "description": "Unofficial GothamChess-flavored bot: tactical, instructive, and allergic to hanging queens.",
+        "label": "The Coach",
+        "description": "Tactical, instructive, and deeply offended by hanging pieces.",
         "skill": 0.72,
         "chaos": 0.22,
         "aggression": 0.72,
@@ -91,8 +91,8 @@ BOT_DIFFICULTIES = {
         "style": "coach",
     },
     "magnus": {
-        "label": "Magnus-ish Endboss",
-        "description": "Unofficial elite-flavored bot: calm, flexible, and annoyingly hard to trick.",
+        "label": "The Grandmaster",
+        "description": "Calm, flexible, and annoyingly hard to trick.",
         "skill": 0.96,
         "chaos": 0.04,
         "aggression": 0.48,

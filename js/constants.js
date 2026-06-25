@@ -41,9 +41,9 @@ export const defaultBotDifficulties = [
   { id: "easy",          label: "Easy Explorer",        description: "Mostly random legal moves while it learns what the pieces do." },
   { id: "medium",        label: "Balanced Club Bot",    description: "A normal casual opponent that likes sensible tactics." },
   { id: "hard",          label: "Hard Grinder",         description: "Low-chaos material play with sharper tactical priorities." },
-  { id: "dougdoug",      label: "DougDoug Chaos",       description: "Unofficially inspired by streamer-brain chess: fearless, confused, funny." },
+  { id: "dougdoug",      label: "Chaos Gremlin",        description: "Fearless, confused, and kind of hilarious. Treats every move as a speedrun." },
   { id: "greedy_goblin", label: "Greedy Goblin",        description: "If it can capture something, it probably will." },
   { id: "coffeehouse",   label: "Coffeehouse Attacker", description: "Checks, threats, sacrifices, vibes. Hates quiet positions." },
-  { id: "gotham",        label: "Gotham Tactics",       description: "Unofficial GothamChess-flavored bot: tactical, instructive, and solid." },
-  { id: "magnus",        label: "Magnus-ish Endboss",   description: "Unofficial elite-flavored bot: calm, flexible, and hard to trick." },
+  { id: "gotham",        label: "The Coach",            description: "Tactical, instructive, and deeply offended by hanging pieces." },
+  { id: "magnus",        label: "The Grandmaster",      description: "Calm, flexible, and annoyingly hard to trick." },
 ];

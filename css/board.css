@@ -74,7 +74,7 @@
 .chess-board {
   display: grid;
   grid-template-columns: repeat(8, minmax(0, 1fr));
-  width: min(88vw, 640px);
+  width: min(100%, 640px);
   aspect-ratio: 1;
   overflow: hidden;
   border-radius: 8px;
