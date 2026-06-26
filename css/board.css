@@ -103,7 +103,7 @@
 .chess-square.dark          { background: var(--board-dark); }
 .chess-square.is-last-move  { box-shadow: inset 0 0 0 999px rgba(255, 209, 102, 0.28); }
 .chess-square.is-selected   { box-shadow: inset 0 0 0 4px #ff5d73; }
-.chess-square.is-movable    { cursor: pointer; }
+.chess-square.is-movable    { cursor: pointer; touch-action: none; }
 
 .chess-square.is-target::after {
   content: "";

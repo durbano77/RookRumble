@@ -18,7 +18,7 @@ function startDrag(e, square) {
   const piece = state.game.board?.[square];
   if (!piece || piece.color !== playerColor() || legalMovesFrom(square).length === 0) return;
 
-  if (!e.touches) e.preventDefault(); // Prevent text selection on mouse drag
+  e.preventDefault(); // Prevent text selection (mouse) and page scroll (touch)
 
   const clientX = e.touches ? e.touches[0].clientX : e.clientX;
   const clientY = e.touches ? e.touches[0].clientY : e.clientY;
@@ -214,7 +214,7 @@ export function renderChessBoard() {
     cell.addEventListener("click", () => handleChessSquareClick(square));
     if (legalFromSquares.has(square) && isMyTurn()) {
       cell.addEventListener("mousedown", (e) => startDrag(e, square));
-      cell.addEventListener("touchstart", (e) => startDrag(e, square), { passive: true });
+      cell.addEventListener("touchstart", (e) => startDrag(e, square), { passive: false });
     }
     chessBoardEl.append(cell);
   }
