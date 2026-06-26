@@ -19,7 +19,7 @@ MSG_RATE_WINDOW = 1.0
 
 _ip_connections: dict[str, int] = {}
 game_server = GameServer()
-ADS_ENABLED = os.environ.get("ADS_ENABLED", "").lower() in ("1", "true", "yes")
+# ADS_ENABLED = os.environ.get("ADS_ENABLED", "").lower() in ("1", "true", "yes")
 
 # ── Security middleware ───────────────────────────────────────────────────────
 
@@ -35,17 +35,17 @@ _CSP = (
 )
 
 # Relaxed CSP used when ADS_ENABLED=true — allows AdSense script and iframe domains.
-_CSP_WITH_ADS = (
-    "default-src 'self'; "
-    "script-src 'self' https://cdn.jsdelivr.net https://pagead2.googlesyndication.com; "
-    "connect-src 'self' ws: wss: https://cdn.jsdelivr.net https://googleads.g.doubleclick.net; "
-    "worker-src 'self'; "
-    "frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com; "
-    "img-src 'self' data: https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net; "
-    "object-src 'none'; "
-    "base-uri 'self'; "
-    "frame-ancestors 'none'"
-)
+# _CSP_WITH_ADS = (
+#     "default-src 'self'; "
+#     "script-src 'self' https://cdn.jsdelivr.net https://pagead2.googlesyndication.com; "
+#     "connect-src 'self' ws: wss: https://cdn.jsdelivr.net https://googleads.g.doubleclick.net; "
+#     "worker-src 'self'; "
+#     "frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com; "
+#     "img-src 'self' data: https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net; "
+#     "object-src 'none'; "
+#     "base-uri 'self'; "
+#     "frame-ancestors 'none'"
+# )
 
 
 @web.middleware
@@ -53,7 +53,7 @@ async def security_headers_middleware(request, handler):
     response = await handler(request)
     if response.prepared:
         return response
-    response.headers["Content-Security-Policy"] = _CSP_WITH_ADS if ADS_ENABLED else _CSP
+    response.headers["Content-Security-Policy"] = _CSP
     response.headers["X-Frame-Options"] = "DENY"
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["Referrer-Policy"] = "no-referrer"
@@ -132,8 +132,8 @@ async def css_handler(_request):
     return await serve_file("styles.css", "text/css")
 
 
-async def ads_txt_handler(_request):
-    return await serve_file("ads.txt", "text/plain")
+# async def ads_txt_handler(_request):
+#     return await serve_file("ads.txt", "text/plain")
 
 
 async def favicon_handler(_request):
@@ -173,7 +173,7 @@ def make_app():
     app.router.add_get("/index.html", index_handler)
     app.router.add_get("/ws", websocket_handler)
     app.router.add_get("/styles.css", css_handler)
-    app.router.add_get("/ads.txt", ads_txt_handler)
+    # app.router.add_get("/ads.txt", ads_txt_handler)
     app.router.add_get("/favicon.ico", favicon_handler)
     app.router.add_get("/apple-touch-icon.png", apple_touch_icon_handler)
     app.router.add_get("/manifest.json", manifest_handler)

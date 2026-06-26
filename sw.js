@@ -12,7 +12,7 @@ const SHELL = [
   '/css/menu.css',
   '/css/responsive.css',
   '/js/main.js',
-  '/js/ads.js',
+  // '/js/ads.js',
   '/js/offline-adapter.js',
   '/js/workers/stockfish-worker.js',
   '/js/workers/pyodide-worker.js',
