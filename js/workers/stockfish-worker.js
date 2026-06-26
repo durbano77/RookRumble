@@ -1,37 +1,51 @@
-// Stockfish UCI wrapper for use as a Web Worker
-// Loaded via: new Worker('/js/workers/stockfish-worker.js')
-importScripts('/static/stockfish.js');
+// Wraps stockfish.js (an Emscripten UCI engine) as a nested Worker.
+// Receives { fen, skillLevel, movetime? } and replies { bestmove }.
+//
+// stockfish.js is a self-contained Emscripten build that owns self.onmessage
+// and self.postMessage directly — it cannot be used via importScripts() +
+// factory call. Spawning it as a nested Worker is the correct pattern.
 
-let stockfish;
-let resolveMove;
+let sfWorker = null;
+let uciReady = false;
+let pendingSearch = null;
 
-function init() {
-  stockfish = Stockfish();
-  stockfish.onmessage = (event) => {
-    const line = typeof event === 'string' ? event : event.data;
-    if (typeof line !== 'string') return;
-    if (line.startsWith('bestmove')) {
-      const parts = line.split(' ');
-      const move = parts[1];
-      if (resolveMove && move && move !== '(none)') {
-        resolveMove(move);
-        resolveMove = null;
+function sendSearch({ fen, skillLevel, movetime }) {
+  sfWorker.postMessage('ucinewgame');
+  sfWorker.postMessage(`setoption name Skill Level value ${skillLevel}`);
+  sfWorker.postMessage(`position fen ${fen}`);
+  sfWorker.postMessage(`go movetime ${movetime}`);
+}
+
+function ensureEngine() {
+  if (sfWorker) return;
+  sfWorker = new Worker('/static/stockfish.js');
+  sfWorker.onmessage = (e) => {
+    const line = typeof e.data === 'string' ? e.data : '';
+    if (!uciReady) {
+      if (line === 'uciok') {
+        uciReady = true;
+        if (pendingSearch) {
+          sendSearch(pendingSearch);
+          pendingSearch = null;
+        }
       }
+      return;
+    }
+    if (line.startsWith('bestmove')) {
+      const move = line.split(' ')[1];
+      self.postMessage({ bestmove: move && move !== '(none)' ? move : null });
     }
   };
-  stockfish.postMessage('uci');
+  sfWorker.postMessage('uci');
 }
 
 self.onmessage = (e) => {
   const { fen, skillLevel = 20, movetime = 1000 } = e.data;
-  if (!stockfish) init();
-
-  resolveMove = (move) => {
-    self.postMessage({ bestmove: move });
-  };
-
-  stockfish.postMessage('ucinewgame');
-  stockfish.postMessage(`setoption name Skill Level value ${skillLevel}`);
-  stockfish.postMessage(`position fen ${fen}`);
-  stockfish.postMessage(`go movetime ${movetime}`);
+  ensureEngine();
+  const search = { fen, skillLevel, movetime };
+  if (uciReady) {
+    sendSearch(search);
+  } else {
+    pendingSearch = search;
+  }
 };
