@@ -99,6 +99,24 @@ BOT_DIFFICULTIES = {
         "greed": 0.68,
         "style": "endboss",
     },
+    "stockfish_1": {
+        "label": "Stockfish — Casual",
+        "description": "Classic only. Plays around 1000 Elo — makes occasional blunders.",
+        "engine": True,
+        "skill_level": 5,
+    },
+    "stockfish_2": {
+        "label": "Stockfish — Club",
+        "description": "Classic only. Plays around 1600 Elo — solid tactical play.",
+        "engine": True,
+        "skill_level": 12,
+    },
+    "stockfish_3": {
+        "label": "Stockfish — Master",
+        "description": "Classic only. Full strength — near-perfect play.",
+        "engine": True,
+        "skill_level": 20,
+    },
 }
 
 THRESS_MUTATORS = [
@@ -154,7 +172,13 @@ def variants_payload():
 
 def bots_payload():
     return [
-        {"id": key, "label": data["label"], "description": data["description"]}
+        {
+            "id": key,
+            "label": data["label"],
+            "description": data["description"],
+            "engine": data.get("engine", False),
+            "skillLevel": data.get("skill_level"),
+        }
         for key, data in BOT_DIFFICULTIES.items()
     ]
 

@@ -133,6 +133,8 @@ class GameServer:
         active_game = room.active_game()
         if not room.bot_enabled() or active_game is None:
             return
+        if BOT_DIFFICULTIES.get(room.bot_difficulty, {}).get("engine"):
+            return  # Client-side engine handles its own moves
 
         safety_turns = 0
         while (
@@ -235,6 +237,17 @@ class GameServer:
                 await ws.send_json({"type": "error", "message": message})
             elif room.bot_enabled():
                 await self.play_bot_turns(room)
+            await room.broadcast_sync()
+            return
+
+        if message_type == "engine_move":
+            if active_game is None or active_game.game_state != "playing":
+                return
+            if not room.bot_enabled() or not BOT_DIFFICULTIES.get(room.bot_difficulty, {}).get("engine"):
+                return
+            if active_game.player_index_for_turn() != 1:
+                return
+            active_game.move(1, str(payload.get("from", "")), str(payload.get("to", "")), payload.get("promotion"))
             await room.broadcast_sync()
             return
 

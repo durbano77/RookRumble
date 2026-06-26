@@ -25,7 +25,9 @@ ADS_ENABLED = os.environ.get("ADS_ENABLED", "").lower() in ("1", "true", "yes")
 
 _CSP = (
     "default-src 'self'; "
-    "connect-src 'self' ws: wss:; "
+    "script-src 'self' https://cdn.jsdelivr.net; "
+    "connect-src 'self' ws: wss: https://cdn.jsdelivr.net; "
+    "worker-src 'self'; "
     "img-src 'self' data:; "
     "object-src 'none'; "
     "base-uri 'self'; "
@@ -35,8 +37,9 @@ _CSP = (
 # Relaxed CSP used when ADS_ENABLED=true — allows AdSense script and iframe domains.
 _CSP_WITH_ADS = (
     "default-src 'self'; "
-    "script-src 'self' https://pagead2.googlesyndication.com; "
-    "connect-src 'self' ws: wss: https://googleads.g.doubleclick.net; "
+    "script-src 'self' https://cdn.jsdelivr.net https://pagead2.googlesyndication.com; "
+    "connect-src 'self' ws: wss: https://cdn.jsdelivr.net https://googleads.g.doubleclick.net; "
+    "worker-src 'self'; "
     "frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com; "
     "img-src 'self' data: https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net; "
     "object-src 'none'; "
@@ -179,6 +182,8 @@ def make_app():
     app.router.add_static("/js", ROOT / "js")
     app.router.add_static("/css", ROOT / "css")
     app.router.add_static("/icons", ROOT / "icons")
+    app.router.add_static("/static", ROOT / "static")
+    app.router.add_static("/game", ROOT / "game")  # Python source files for Pyodide
     return app
 
 

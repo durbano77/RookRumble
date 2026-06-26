@@ -46,4 +46,7 @@ export const defaultBotDifficulties = [
   { id: "coffeehouse",   label: "Coffeehouse Attacker", description: "Checks, threats, sacrifices, vibes. Hates quiet positions." },
   { id: "gotham",        label: "The Coach",            description: "Tactical, instructive, and deeply offended by hanging pieces." },
   { id: "magnus",        label: "The Grandmaster",      description: "Calm, flexible, and annoyingly hard to trick." },
+  { id: "stockfish_1",   label: "Stockfish — Casual",   description: "Classic only. Around 1000 Elo.", engine: true, skillLevel: 5 },
+  { id: "stockfish_2",   label: "Stockfish — Club",     description: "Classic only. Around 1600 Elo.", engine: true, skillLevel: 12 },
+  { id: "stockfish_3",   label: "Stockfish — Master",   description: "Classic only. Full strength.",   engine: true, skillLevel: 20 },
 ];

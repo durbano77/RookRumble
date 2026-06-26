@@ -1,4 +1,4 @@
-const CACHE = 'rook-rumble-v1';
+const CACHE = 'rook-rumble-v2';
 
 // App shell — static assets that make the page load fast on repeat visits
 const SHELL = [
@@ -13,6 +13,11 @@ const SHELL = [
   '/css/responsive.css',
   '/js/main.js',
   '/js/ads.js',
+  '/js/offline-adapter.js',
+  '/js/workers/stockfish-worker.js',
+  '/js/workers/pyodide-worker.js',
+  '/static/stockfish.js',
+  '/static/chess.whl',
   '/manifest.json',
   '/favicon.ico',
   '/icons/icon-192.png',
@@ -35,6 +40,19 @@ self.addEventListener('activate', (e) => {
 self.addEventListener('fetch', (e) => {
   // WebSocket and live game API — always go to network, never cache
   if (e.request.url.includes('/ws')) return;
+
+  // Cache Pyodide CDN resources after first online use for offline availability
+  if (e.request.url.includes('cdn.jsdelivr.net')) {
+    e.respondWith(
+      caches.match(e.request).then((cached) => cached || fetch(e.request).then((response) => {
+        if (response.ok) {
+          caches.open(CACHE).then((c) => c.put(e.request, response.clone()));
+        }
+        return response;
+      }))
+    );
+    return;
+  }
 
   e.respondWith(
     fetch(e.request)

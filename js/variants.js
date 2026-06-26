@@ -132,13 +132,42 @@ export function renderBotSelector() {
   const selectedExists = options.some((b) => b.id === selected);
   botDifficultySelect.innerHTML = "";
 
-  for (const bot of options) {
-    const option = document.createElement("option");
-    option.value = bot.id;
-    option.textContent = bot.label;
-    option.title = bot.description;
-    option.selected = selectedExists ? bot.id === selected : bot.id === "dougdoug";
-    botDifficultySelect.append(option);
+  const personalityBots = options.filter((b) => !b.engine);
+  const engineBots = options.filter((b) => b.engine);
+
+  if (engineBots.length > 0) {
+    const personalityGroup = document.createElement("optgroup");
+    personalityGroup.label = "Personality Bots";
+    for (const bot of personalityBots) {
+      const option = document.createElement("option");
+      option.value = bot.id;
+      option.textContent = bot.label;
+      option.title = bot.description;
+      option.selected = selectedExists ? bot.id === selected : bot.id === "dougdoug";
+      personalityGroup.append(option);
+    }
+    botDifficultySelect.append(personalityGroup);
+
+    const engineGroup = document.createElement("optgroup");
+    engineGroup.label = "Stockfish Engine";
+    for (const bot of engineBots) {
+      const option = document.createElement("option");
+      option.value = bot.id;
+      option.textContent = bot.label;
+      option.title = bot.description;
+      option.selected = selectedExists ? bot.id === selected : false;
+      engineGroup.append(option);
+    }
+    botDifficultySelect.append(engineGroup);
+  } else {
+    for (const bot of options) {
+      const option = document.createElement("option");
+      option.value = bot.id;
+      option.textContent = bot.label;
+      option.title = bot.description;
+      option.selected = selectedExists ? bot.id === selected : bot.id === "dougdoug";
+      botDifficultySelect.append(option);
+    }
   }
 
   if (!selectedExists && !options.some((b) => b.id === "dougdoug")) {

@@ -24,6 +24,8 @@ export const state = {
   uiStep: "setup",
   pendingStepAfterRoom: null,
   inQueue: false,
+  // Offline mode: when set, send() routes through this function instead of WebSocket
+  _offlineSend: null,
 };
 
 export function websocketUrl() {
@@ -36,6 +38,10 @@ export function canSend() {
 }
 
 export function send(type, payload = {}) {
+  if (state._offlineSend) {
+    state._offlineSend(type, payload);
+    return;
+  }
   if (canSend()) {
     state.ws.send(JSON.stringify({ type, ...payload }));
   }
