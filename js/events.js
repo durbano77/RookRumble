@@ -3,7 +3,6 @@ import {
   joinRoomButton, roomCodeInput, leaveRoomButton,
   startMatchButton, pauseMatchButton, restartMatchButton,
   overlayActionButton, continueToPlayButton, backToSetupButton,
-  playBackToGamesButton, playBackToSetupButton,
   menuButton, closeMenuButton, menuExitMainButton, menuExitGamesButton,
   menuOpenSettingsButton, settingsBackButton,
   menuOpenCreditsButton, creditsBackButton,
@@ -77,8 +76,6 @@ overlayActionButton.addEventListener("click", () => {
 // Step navigation
 continueToPlayButton.addEventListener("click", () => { setStep("play"); });
 backToSetupButton.addEventListener("click", () => { exitToMainMenu(); });
-playBackToGamesButton.addEventListener("click", () => { exitToGameSelection(); });
-playBackToSetupButton.addEventListener("click", () => { exitToMainMenu(); });
 
 for (const button of stepButtons) {
   button.addEventListener("click", () => { setStep(button.dataset.stepTarget); });

@@ -2,7 +2,7 @@ import {
   score1El, score2El, player1StateEl, player2StateEl,
   roleDisplayEl, roleHintEl, statusEl,
   startMatchButton, pauseMatchButton, restartMatchButton,
-  continueToPlayButton, backToSetupButton, playBackToGamesButton, playBackToSetupButton,
+  continueToPlayButton, backToSetupButton,
   createRoomButton, playBotButton, botDifficultySelect, joinRoomButton, leaveRoomButton,
   menuExitMainButton, menuExitGamesButton,
   overlayKickerEl, overlayTitleEl, overlayTextEl, overlayActionButton, overlayEl,
@@ -173,8 +173,6 @@ export function updateButtons() {
   restartMatchButton.disabled = !hostReady || !bothConnected || !hasVariant;
   continueToPlayButton.disabled = !inRoom || !hasVariant;
   backToSetupButton.disabled = !connected;
-  playBackToGamesButton.disabled = !inRoom || !hasVariant;
-  playBackToSetupButton.disabled = !connected;
   menuExitMainButton.disabled = !connected && !inRoom;
   menuExitGamesButton.disabled = !inRoom;
   renderVariantPicker();

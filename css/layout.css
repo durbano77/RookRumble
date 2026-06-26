@@ -34,6 +34,11 @@ select {
   margin-bottom: 20px;
 }
 
+body[data-step="games"] .hero,
+body[data-step="play"] .hero {
+  display: none;
+}
+
 .eyebrow {
   margin: 0 0 6px;
   text-transform: uppercase;
