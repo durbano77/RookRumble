@@ -20,6 +20,7 @@ class BaseGame:
         self.last_move = None
         self.move_count = 0
         self.move_history = []
+        self.move_history_san = []
         self.timer_config = None          # {"minutes": int, "increment": int} or None
         self.remaining = [None, None]     # seconds remaining for [white, black]
         self.turn_started = None          # monotonic timestamp when current turn began
@@ -31,6 +32,7 @@ class BaseGame:
         self.last_move = None
         self.move_count = 0
         self.move_history = []
+        self.move_history_san = []
         self.turn_started = None
         if self.timer_config:
             initial = float(self.timer_config["minutes"] * 60)
@@ -213,6 +215,7 @@ class BaseGame:
 
     def push_legal_move(self, move):
         mover_index = self.player_index_for_turn()
+        san = self.board.san(move)
         self.board.push(move)
         self.move_count += 1
         self.last_move = {
@@ -221,6 +224,7 @@ class BaseGame:
             "promotion": chess.piece_symbol(move.promotion) if move.promotion else None,
         }
         self.move_history.append(move.uci())
+        self.move_history_san.append(san)
         self._after_push(move)
         self._apply_move_clock(mover_index)
         if self.game_state != "gameover":
@@ -475,6 +479,7 @@ class BaseGame:
             "legalMoves": self.legal_moves_payload(viewer_index) if self.game_state == "playing" else {},
             "lastMove": self.last_move,
             "moveHistory": self.move_history,
+            "moveHistorySan": self.move_history_san,
             "mutatorHistory": self.mutator_history_payload(),
             "isCheck": self.board.is_check(),
             "isGameOver": self.game_state == "gameover",

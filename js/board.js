@@ -1,7 +1,7 @@
 import {
   chessBoardEl, chessTurnEl, chessResultEl,
   mutatorPanelEl, mutatorOptionsEl, mutatorTitleEl,
-  promotionPanelEl,
+  promotionPanelEl, moveListEl,
 } from "./dom.js";
 import { pieceSymbols } from "./constants.js";
 import {
@@ -252,6 +252,25 @@ export function handleChessSquareClick(square) {
   renderChessBoard();
 }
 
+function renderMoveList() {
+  const moves = state.game.moveHistorySan || [];
+  if (moves.length === 0) {
+    moveListEl.innerHTML = "";
+    return;
+  }
+
+  const cells = [];
+  for (let i = 0; i < moves.length; i += 2) {
+    const n = Math.floor(i / 2) + 1;
+    cells.push(`<span class="move-number">${n}.</span>`);
+    cells.push(`<span class="move-san">${moves[i]}</span>`);
+    cells.push(`<span class="move-san">${moves[i + 1] ?? ""}</span>`);
+  }
+  moveListEl.innerHTML = cells.join("");
+  moveListEl.scrollTop = moveListEl.scrollHeight;
+}
+
 export function renderGame() {
   renderChessBoard();
+  renderMoveList();
 }

@@ -7,12 +7,6 @@ export const joinRoomButton = document.getElementById("join-room");
 export const leaveRoomButton = document.getElementById("leave-room");
 export const variantPickerEl = document.getElementById("variant-picker");
 export const variantPickerHintEl = document.getElementById("variant-picker-hint");
-export const score1El = document.getElementById("score1");
-export const score2El = document.getElementById("score2");
-export const player1StateEl = document.getElementById("player1-state");
-export const player2StateEl = document.getElementById("player2-state");
-export const roleDisplayEl = document.getElementById("role-display");
-export const roleHintEl = document.getElementById("role-hint");
 export const statusEl = document.getElementById("status");
 export const startMatchButton = document.getElementById("start-match");
 export const pauseMatchButton = document.getElementById("pause-match");
@@ -50,8 +44,10 @@ export const creditsBackButton = document.getElementById("credits-back");
 export const stepButtons = [...document.querySelectorAll("[data-step-target]")];
 export const stepPanels = [...document.querySelectorAll("[data-step-panel]")];
 
+export const clockBarEl = document.getElementById("clock-bar");
 export const clock0El = document.getElementById("clock0");
 export const clock1El = document.getElementById("clock1");
+export const moveListEl = document.getElementById("move-list");
 
 export const gameSelectModal = document.getElementById("game-select-modal");
 export const gameModalClose = document.getElementById("game-modal-close");

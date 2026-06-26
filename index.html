@@ -130,32 +130,22 @@
       </section>
 
       <section class="step-panel" id="play-panel" data-step-panel="play">
-        <section class="hud">
-          <article class="score-card player-one">
-            <span class="label">White</span>
-            <strong id="score1">White</strong>
-            <p id="player1-state">Waiting</p>
-            <div class="player-clock is-hidden" id="clock0">—</div>
-          </article>
-          <article class="score-card player-two">
-            <span class="label">Black</span>
-            <strong id="score2">Black</strong>
-            <p id="player2-state">Waiting</p>
-            <div class="player-clock is-hidden" id="clock1">—</div>
-          </article>
-          <article class="score-card status-card">
-            <span class="label">You Are</span>
-            <strong id="role-display">Not In Room</strong>
-            <p id="role-hint">Create or join a room to claim a side.</p>
-          </article>
-        </section>
-
         <section class="game-shell">
           <div class="game-stage">
             <div class="chess-view" id="chess-view">
               <div class="chess-meta">
                 <strong id="chess-turn">Choose a variant</strong>
                 <span id="chess-result">Game not started</span>
+              </div>
+              <div class="chess-clock-bar is-hidden" id="clock-bar">
+                <div class="clock-cell">
+                  <span class="clock-label">W</span>
+                  <span class="player-clock" id="clock0">—</span>
+                </div>
+                <div class="clock-cell">
+                  <span class="clock-label">B</span>
+                  <span class="player-clock" id="clock1">—</span>
+                </div>
               </div>
               <div class="mutator-panel is-hidden" id="mutator-panel">
                 <span id="mutator-title">Choose a Thress card</span>
@@ -171,6 +161,7 @@
                   <button data-promotion="n" type="button">Knight</button>
                 </div>
               </div>
+              <div class="move-list" id="move-list"></div>
             </div>
 
             <div id="overlay" class="overlay">

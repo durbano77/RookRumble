@@ -1,12 +1,11 @@
 import {
-  score1El, score2El, player1StateEl, player2StateEl,
-  roleDisplayEl, roleHintEl, statusEl,
+  statusEl,
   startMatchButton, pauseMatchButton, restartMatchButton,
   continueToPlayButton, backToSetupButton,
   createRoomButton, playBotButton, botDifficultySelect, joinRoomButton, leaveRoomButton,
   menuExitMainButton, menuExitGamesButton,
   overlayKickerEl, overlayTitleEl, overlayTextEl, overlayActionButton, overlayEl,
-  clock0El, clock1El,
+  clockBarEl, clock0El, clock1El,
   quickMatchButton, quickMatchGroupEl, matchmakingRowEl,
 } from "./dom.js";
 import {
@@ -49,15 +48,13 @@ function updateClockDisplay(clock) {
   clockData = clock ? { ...clock, receivedAt: Date.now() } : null;
 
   if (clock) {
-    clock0El.classList.remove("is-hidden");
-    clock1El.classList.remove("is-hidden");
+    clockBarEl.classList.remove("is-hidden");
     if (!clockInterval) {
       clockInterval = setInterval(renderClocks, 100);
     }
     renderClocks();
   } else {
-    clock0El.classList.add("is-hidden");
-    clock1El.classList.add("is-hidden");
+    clockBarEl.classList.add("is-hidden");
     if (clockInterval) {
       clearInterval(clockInterval);
       clockInterval = null;
@@ -181,29 +178,6 @@ export function updateButtons() {
 
 export function updateHud() {
   const game = state.game;
-
-  score1El.textContent = "White";
-  score2El.textContent = state.bot.enabled ? botLabel() : "Black";
-  player1StateEl.textContent = state.players[0].connected
-    ? game.turn === "white" && game.gameState === "playing" ? "To move" : "Connected"
-    : "Waiting";
-  player2StateEl.textContent = state.players[1].connected
-    ? game.turn === "black" && game.gameState === "playing"
-      ? state.bot.enabled ? "Bot to move" : "To move"
-      : "Connected"
-    : "Waiting";
-
-  if (state.playerIndex === null) {
-    roleDisplayEl.textContent = "Not In Room";
-    roleHintEl.textContent = "Create or join a room to claim a side.";
-  } else {
-    roleDisplayEl.textContent = state.playerIndex === 0 ? "White" : "Black";
-    roleHintEl.textContent = state.bot.enabled
-      ? `You play White against ${botLabel()}.`
-      : state.isHost
-        ? "You host this room and play White."
-        : "You play Black in this room.";
-  }
 
   statusEl.textContent = game.message || "Choose a variant to begin.";
   updateClockDisplay(game.clock || null);
