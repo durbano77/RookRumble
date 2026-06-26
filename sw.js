@@ -1,4 +1,4 @@
-const CACHE = 'rook-rumble-v3';
+const CACHE = 'rook-rumble-v4';
 
 // App shell — static assets that make the page load fast on repeat visits
 const SHELL = [

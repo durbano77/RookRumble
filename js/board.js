@@ -8,6 +8,92 @@ import {
   state, send, playerColor, isMyTurn, pendingMutator, isMyMutatorChoice, variantTitle,
 } from "./state.js";
 
+// ── Drag & drop ────────────────────────────────────────────────────────────
+
+let dragState = null;  // { fromSquare, ghost, moved }
+let ignoreNextClick = false;
+
+function startDrag(e, square) {
+  if (!isMyTurn() || state.pendingPromotion || pendingMutator()) return;
+  const piece = state.game.board?.[square];
+  if (!piece || piece.color !== playerColor() || legalMovesFrom(square).length === 0) return;
+
+  if (!e.touches) e.preventDefault(); // Prevent text selection on mouse drag
+
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+  state.selectedSquare = square;
+  renderChessBoard();
+
+  const ghost = document.createElement("div");
+  ghost.className = "drag-ghost";
+  ghost.classList.add(piece.color === "white" ? "piece-white" : "piece-black");
+  ghost.textContent = pieceText(piece.symbol);
+  ghost.style.left = `${clientX}px`;
+  ghost.style.top = `${clientY}px`;
+  document.body.append(ghost);
+
+  chessBoardEl.style.touchAction = "none";
+  dragState = { fromSquare: square, ghost, moved: false };
+}
+
+function onDragMove(e) {
+  if (!dragState) return;
+  e.preventDefault(); // Prevent scroll on touch while dragging a piece
+
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  dragState.moved = true;
+  dragState.ghost.style.left = `${clientX}px`;
+  dragState.ghost.style.top = `${clientY}px`;
+}
+
+function onDragEnd(e) {
+  if (!dragState) return;
+
+  const clientX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+  const clientY = e.changedTouches ? e.changedTouches[0].clientY : e.clientY;
+  const { fromSquare, ghost, moved } = dragState;
+
+  dragState = null;
+  ghost.remove();
+  chessBoardEl.style.touchAction = "";
+
+  if (!moved) return; // No meaningful movement — let the click event handle it
+
+  ignoreNextClick = true;
+
+  // Find drop target by bounding rect — more reliable than elementFromPoint when
+  // other elements overlap the board (panels, modals, etc.)
+  let targetSquare = null;
+  for (const sq of chessBoardEl.querySelectorAll("[data-square]")) {
+    const r = sq.getBoundingClientRect();
+    if (clientX >= r.left && clientX <= r.right && clientY >= r.top && clientY <= r.bottom) {
+      targetSquare = sq.dataset.square;
+      break;
+    }
+  }
+
+  if (targetSquare && isLegalTarget(targetSquare)) {
+    const matchingMoves = legalMovesFrom(fromSquare).filter(m => m.to === targetSquare);
+    if (matchingMoves.some(m => m.promotion)) {
+      state.pendingPromotion = { from: fromSquare, to: targetSquare };
+      promotionPanelEl.classList.remove("is-hidden");
+    } else {
+      send("chess_move", { from: fromSquare, to: targetSquare, promotion: null });
+      state.selectedSquare = null;
+    }
+  }
+
+  renderChessBoard();
+}
+
+document.addEventListener("mousemove", onDragMove);
+document.addEventListener("mouseup", onDragEnd);
+document.addEventListener("touchmove", onDragMove, { passive: false });
+document.addEventListener("touchend", onDragEnd, { passive: false });
+
 function pieceText(symbol) {
   return pieceSymbols[symbol] || symbol;
 }
@@ -126,11 +212,16 @@ export function renderChessBoard() {
     cell.textContent = piece ? pieceText(piece.symbol) : "";
     cell.setAttribute("aria-label", piece ? `${piece.color} ${piece.type} on ${square}` : square);
     cell.addEventListener("click", () => handleChessSquareClick(square));
+    if (legalFromSquares.has(square) && isMyTurn()) {
+      cell.addEventListener("mousedown", (e) => startDrag(e, square));
+      cell.addEventListener("touchstart", (e) => startDrag(e, square), { passive: true });
+    }
     chessBoardEl.append(cell);
   }
 }
 
 export function handleChessSquareClick(square) {
+  if (ignoreNextClick) { ignoreNextClick = false; return; }
   if (!isMyTurn() || state.pendingPromotion || pendingMutator()) return;
 
   const piece = state.game.board?.[square];
