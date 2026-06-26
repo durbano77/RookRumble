@@ -1,5 +1,5 @@
 // Pyodide worker — runs the Python game/ package in-browser for offline bot play
-importScripts('https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js');
+importScripts('/static/pyodide/pyodide.js');
 
 let pyodide = null;
 let session = null;
@@ -15,7 +15,7 @@ const VARIANT_FILES = [
 
 async function init() {
   try {
-    pyodide = await loadPyodide();
+    pyodide = await loadPyodide({ indexURL: '/static/pyodide/' });
     await pyodide.loadPackage('micropip');
     const micropip = pyodide.pyimport('micropip');
     await micropip.install('/static/chess.whl');
