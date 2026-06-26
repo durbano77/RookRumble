@@ -23,9 +23,17 @@
   .settings-layout {
     flex-direction: column;
   }
+
+  .settings-fields {
+    width: 100%;
+  }
 }
 
 @media (max-width: 720px) {
+  .chess-meta {
+    padding-right: 52px; /* clear the fixed ⚙ button (40px + 16px margin - 14px app padding) */
+  }
+
   .flow-bar {
     padding: 10px 14px;
   }
@@ -45,10 +53,6 @@
 
   .network-grid {
     grid-template-columns: 1fr;
-  }
-
-  .hud {
-    grid-template-columns: 1fr 1fr;
   }
 
   .mode-card {

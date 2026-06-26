@@ -13,7 +13,16 @@ import {
 let dragState = null;  // { fromSquare, ghost, moved }
 let ignoreNextClick = false;
 
+function cancelDrag() {
+  if (!dragState) return;
+  dragState.ghost.remove();
+  dragState = null;
+  state.selectedSquare = null;
+  renderChessBoard();
+}
+
 function startDrag(e, square) {
+  if (dragState) return; // re-entrancy guard — Firefox re-fires touchstart on rebuilt DOM
   if (!isMyTurn() || state.pendingPromotion || pendingMutator()) return;
   const piece = state.game.board?.[square];
   if (!piece || piece.color !== playerColor() || legalMovesFrom(square).length === 0) return;
@@ -23,8 +32,12 @@ function startDrag(e, square) {
   const clientX = e.touches ? e.touches[0].clientX : e.clientX;
   const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
+  // Highlight the selected square directly — avoid calling renderChessBoard() here
+  // because rebuilding the DOM during touchstart causes Firefox to re-fire touchstart
+  // on the new element, creating multiple ghosts.
   state.selectedSquare = square;
-  renderChessBoard();
+  for (const sq of chessBoardEl.querySelectorAll(".is-selected")) sq.classList.remove("is-selected");
+  chessBoardEl.querySelector(`[data-square="${square}"]`)?.classList.add("is-selected");
 
   const ghost = document.createElement("div");
   ghost.className = "drag-ghost";
@@ -34,7 +47,6 @@ function startDrag(e, square) {
   ghost.style.top = `${clientY}px`;
   document.body.append(ghost);
 
-  chessBoardEl.style.touchAction = "none";
   dragState = { fromSquare: square, ghost, moved: false };
 }
 
@@ -52,13 +64,16 @@ function onDragMove(e) {
 function onDragEnd(e) {
   if (!dragState) return;
 
-  const clientX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
-  const clientY = e.changedTouches ? e.changedTouches[0].clientY : e.clientY;
+  // changedTouches can be empty on touchcancel — fall back to cancelling the drag
+  const touch = e.changedTouches?.[0];
+  if (!touch && e.type === "touchcancel") { cancelDrag(); return; }
+
+  const clientX = touch ? touch.clientX : e.clientX;
+  const clientY = touch ? touch.clientY : e.clientY;
   const { fromSquare, ghost, moved } = dragState;
 
   dragState = null;
   ghost.remove();
-  chessBoardEl.style.touchAction = "";
 
   if (!moved) return; // No meaningful movement — let the click event handle it
 
@@ -93,6 +108,7 @@ document.addEventListener("mousemove", onDragMove);
 document.addEventListener("mouseup", onDragEnd);
 document.addEventListener("touchmove", onDragMove, { passive: false });
 document.addEventListener("touchend", onDragEnd, { passive: false });
+document.addEventListener("touchcancel", onDragEnd);
 
 function pieceText(symbol) {
   return pieceSymbols[symbol] || symbol;

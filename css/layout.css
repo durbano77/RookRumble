@@ -39,6 +39,10 @@ body[data-step="play"] .hero {
   display: none;
 }
 
+body[data-step="play"] .game-shell {
+  margin-top: 44px; /* clear the fixed ⚙ button when hero is hidden */
+}
+
 .eyebrow {
   margin: 0 0 6px;
   text-transform: uppercase;
