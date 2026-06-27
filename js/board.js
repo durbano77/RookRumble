@@ -125,7 +125,7 @@ export function chessSquaresForPlayer() {
   const ranks = ["8", "7", "6", "5", "4", "3", "2", "1"];
 
   if (playerColor() === "black") {
-    return ranks.flatMap((rank) => files.slice().reverse().map((file) => `${file}${rank}`));
+    return [...ranks].reverse().flatMap((rank) => files.slice().reverse().map((file) => `${file}${rank}`));
   }
   return ranks.flatMap((rank) => files.map((file) => `${file}${rank}`));
 }
