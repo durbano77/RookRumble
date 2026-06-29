@@ -128,6 +128,10 @@ async def index_handler(_request):
     return await serve_file("index.html", "text/html")
 
 
+async def privacy_handler(_request):
+    return await serve_file("privacy.html", "text/html")
+
+
 async def css_handler(_request):
     return await serve_file("styles.css", "text/css")
 
@@ -171,6 +175,7 @@ def make_app():
     app.on_startup.append(_on_startup)
     app.router.add_get("/", index_handler)
     app.router.add_get("/index.html", index_handler)
+    app.router.add_get("/privacy.html", privacy_handler)
     app.router.add_get("/ws", websocket_handler)
     app.router.add_get("/styles.css", css_handler)
     # app.router.add_get("/ads.txt", ads_txt_handler)
