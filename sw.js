@@ -1,7 +1,9 @@
-const CACHE = 'rook-rumble-v8';
+const CACHE = 'rook-rumble-v9';
 
-// App shell — static assets that make the page load fast on repeat visits
-const SHELL = [
+// Critical shell — small files that must be cached at install time for the
+// app to load at all. If any of these fail, the SW install fails gracefully
+// (skipWaiting still fires, we just won't have a warm cache).
+const CRITICAL = [
   '/',
   '/css/variables.css',
   '/css/layout.css',
@@ -12,41 +14,18 @@ const SHELL = [
   '/css/menu.css',
   '/css/responsive.css',
   '/js/main.js',
-  // '/js/ads.js',
   '/js/offline-adapter.js',
-  '/js/workers/stockfish-worker.js',
-  '/js/workers/pyodide-worker.js',
-  '/static/stockfish.js',
-  '/static/chess.whl',
-  '/static/pyodide/pyodide.js',
-  '/static/pyodide/pyodide.asm.js',
-  '/static/pyodide/pyodide.asm.wasm',
-  '/static/pyodide/python_stdlib.zip',
-  '/static/pyodide/pyodide-lock.json',
-  '/static/pyodide/micropip-0.6.0-py3-none-any.whl',
-  '/static/pyodide/packaging-23.2-py3-none-any.whl',
-  '/game/__init__.py',
-  '/game/base.py',
-  '/game/constants.py',
-  '/game/lobby.py',
-  '/game/offline.py',
-  '/game/registry.py',
-  '/game/room.py',
-  '/game/variants/__init__.py',
-  '/game/variants/atomic.py',
-  '/game/variants/classic.py',
-  '/game/variants/dice.py',
-  '/game/variants/fog.py',
-  '/game/variants/king_hill.py',
-  '/game/variants/three_check.py',
-  '/game/variants/thress.py',
   '/manifest.json',
-  '/favicon.ico',
   '/icons/icon-192.png',
 ];
 
+// Heavy assets (Pyodide, Stockfish, Python source) are cached lazily on first
+// request via the fetch handler below — no blocking the SW install on them.
+
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)));
+  e.waitUntil(
+    caches.open(CACHE).then((c) => c.addAll(CRITICAL)).catch(() => {})
+  );
   self.skipWaiting();
 });
 
@@ -60,13 +39,13 @@ self.addEventListener('activate', (e) => {
 });
 
 self.addEventListener('fetch', (e) => {
-  // WebSocket and live game API — always go to network, never cache
+  // WebSocket — always network, never cache
   if (e.request.url.includes('/ws')) return;
 
   e.respondWith(
     fetch(e.request)
       .then((response) => {
-        // Cache successful GET responses for the shell
+        // Lazily cache any successful GET response (covers Pyodide, Stockfish, game files)
         if (e.request.method === 'GET' && response.status === 200) {
           const clone = response.clone();
           caches.open(CACHE).then((c) => c.put(e.request, clone));
