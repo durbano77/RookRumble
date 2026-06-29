@@ -1,4 +1,4 @@
-const CACHE = 'rook-rumble-v9';
+const CACHE = 'rook-rumble-v10';
 
 // Critical shell — small files that must be cached at install time for the
 // app to load at all. If any of these fail, the SW install fails gracefully
@@ -42,10 +42,26 @@ self.addEventListener('fetch', (e) => {
   // WebSocket — always network, never cache
   if (e.request.url.includes('/ws')) return;
 
+  // Navigation requests (page loads): fall back to cached home page when offline
+  // so the app shell always loads even with no network connection.
+  if (e.request.mode === 'navigate') {
+    e.respondWith(
+      fetch(e.request)
+        .then((response) => {
+          if (response.status === 200) {
+            caches.open(CACHE).then((c) => c.put(e.request, response.clone()));
+          }
+          return response;
+        })
+        .catch(() => caches.match('/'))
+    );
+    return;
+  }
+
+  // All other requests: network-first, fall back to cache
   e.respondWith(
     fetch(e.request)
       .then((response) => {
-        // Lazily cache any successful GET response (covers Pyodide, Stockfish, game files)
         if (e.request.method === 'GET' && response.status === 200) {
           const clone = response.clone();
           caches.open(CACHE).then((c) => c.put(e.request, clone));
