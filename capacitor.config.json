@@ -1,9 +1,11 @@
 {
-  "appId": "com.yourname.rookrumble",
+  "appId": "club.casualchess.rookrumble",
   "appName": "Rook Rumble",
-  "webDir": ".",
+  "webDir": "www",
   "server": {
-    "url": "https://YOUR-APP.onrender.com",
-    "cleartext": false
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": false
   }
 }

@@ -29,6 +29,11 @@ export const state = {
 };
 
 export function websocketUrl() {
+  // In the native Android app (Capacitor) window.location.host is "localhost",
+  // so we must point directly at the hosted server instead.
+  if (window.Capacitor?.isNativePlatform?.()) {
+    return 'wss://rookrumble.onrender.com/ws';
+  }
   const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
   return `${protocol}//${window.location.host}/ws`;
 }

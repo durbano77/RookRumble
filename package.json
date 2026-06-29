@@ -2,7 +2,12 @@
   "name": "rook-rumble",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "description": "Rook Rumble – Casual Chess Club",
+  "scripts": {
+    "build": "node build.js",
+    "sync": "npm run build && npx cap sync android"
+  },
   "dependencies": {
     "@capacitor/android": "^6.0.0",
     "@capacitor/core": "^6.0.0"

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Rook Rumble</string>
+    <string name="title_activity_main">Rook Rumble</string>
+    <string name="package_name">club.casualchess.rookrumble</string>
+    <string name="custom_url_scheme">club.casualchess.rookrumble</string>
+</resources>

@@ -1,6 +1,11 @@
 node_modules/
-android/
 ios/
+www/
 __pycache__/
 *.pyc
 .DS_Store
+
+# Android build output only — source files are tracked
+android/app/build/
+android/.gradle/
+android/build/
