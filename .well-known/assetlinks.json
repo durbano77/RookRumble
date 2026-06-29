@@ -2,7 +2,7 @@
   "relation": ["delegate_permission/common.handle_all_urls"],
   "target": {
     "namespace": "android_app",
-    "package_name": "com.yourname.rookrumble",
-    "sha256_cert_fingerprints": ["PASTE_YOUR_SHA256_FINGERPRINT_HERE"]
+    "package_name": "club.casualchess.rookrumble",
+    "sha256_cert_fingerprints": ["D1:96:B8:03:A8:A4:FE:66:26:AA:19:4D:CF:A8:E6:E4:EE:60:87:E6:E4:4D:05:B3:B1:0A:3E:D9:32:50:09:B5"]
   }
 }]
