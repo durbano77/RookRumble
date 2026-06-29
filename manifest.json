@@ -13,10 +13,44 @@
   "background_color": "#151711",
   "theme_color": "#151711",
   "categories": ["games", "entertainment"],
+  "prefer_related_applications": false,
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  },
   "icons": [
     { "src": "/icons/icon-192.png", "type": "image/png", "sizes": "192x192" },
     { "src": "/icons/icon-512.png", "type": "image/png", "sizes": "512x512" },
     { "src": "/icons/icon-192-maskable.png", "type": "image/png", "sizes": "192x192", "purpose": "maskable" },
     { "src": "/icons/icon-512-maskable.png", "type": "image/png", "sizes": "512x512", "purpose": "maskable" }
+  ],
+  "screenshots": [
+    {
+      "src": "/icons/screenshot-narrow.png",
+      "sizes": "780x1688",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Home screen — create a room or play a bot"
+    },
+    {
+      "src": "/icons/screenshot-wide.png",
+      "sizes": "2560x1600",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Classic chess game in progress"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Play a Bot",
+      "short_name": "Bot",
+      "description": "Jump straight into a game against a bot opponent",
+      "url": "/"
+    },
+    {
+      "name": "Quick Match",
+      "short_name": "Match",
+      "description": "Find a random online opponent automatically",
+      "url": "/"
+    }
   ]
 }
