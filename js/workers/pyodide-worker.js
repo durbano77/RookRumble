@@ -18,7 +18,7 @@ async function init() {
     pyodide = await loadPyodide({ indexURL: '/static/pyodide/' });
     await pyodide.loadPackage('micropip');
     const micropip = pyodide.pyimport('micropip');
-    await micropip.install('/static/chess.whl');
+    await micropip.install(`${self.location.origin}/static/chess-1.11.2-py3-none-any.whl`);
 
     // Write game/ package files into Pyodide's virtual filesystem
     pyodide.FS.mkdir('/app');
