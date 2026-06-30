@@ -4,6 +4,8 @@ www/
 __pycache__/
 *.pyc
 .DS_Store
+.idea/
+android/.idea/
 
 # Android build output only — source files are tracked
 android/app/build/
