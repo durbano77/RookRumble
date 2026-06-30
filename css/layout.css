@@ -24,7 +24,17 @@ select {
   width: min(100%, 1080px);
   margin: 0 auto;
   padding: 24px max(14px, env(safe-area-inset-right)) max(36px, env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left));
-  padding-top: max(24px, env(safe-area-inset-top));
+  padding-top: max(24px, env(safe-area-inset-top, 0px));
+}
+
+/* Native Capacitor: env(safe-area-inset-top) may return 0 on Android WebView.
+   Use a 32 px fallback (≥ standard 24 dp status bar) so content clears the bar. */
+html[data-native] .app {
+  padding-top: max(36px, env(safe-area-inset-top, 0px));
+}
+
+html[data-native] body[data-step="play"] .game-shell {
+  margin-top: 88px; /* 32px status bar + 40px settings button + 16px gap */
 }
 
 /* ── Hero ────────────────────────────────────────────────────────────────── */

@@ -124,7 +124,15 @@ export function connectSocket() {
   const ws = new WebSocket(websocketUrl());
   state.ws = ws;
 
+  // Android's native WebView can take minutes to surface a close/error event
+  // when the device is truly offline. Force offline mode after 6 s if the
+  // socket still hasn't opened.
+  const offlineTimer = setTimeout(() => {
+    if (!everConnected && !isOffline) ws.close();
+  }, 6000);
+
   ws.addEventListener("open", () => {
+    clearTimeout(offlineTimer);
     everConnected = true;
     setConnectionState("connected");
   });
