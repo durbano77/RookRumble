@@ -13,23 +13,29 @@ export const pieceSymbols = {
 };
 
 export const defaultVariants = [
-  { id: "classic",     label: "Classic",          description: "Regular chess, clean and familiar." },
-  { id: "three_check", label: "Three-Check",       description: "Win by checking the enemy king three times." },
-  { id: "king_hill",   label: "King of the Hill",  description: "Win by marching your king into the center." },
-  { id: "atomic",      label: "Atomic",            description: "Captures explode nearby pieces." },
-  { id: "dice",        label: "Dice Chess",        description: "A die chooses which piece type must move." },
-  { id: "fog",         label: "Fog of War",        description: "You only see what your army can reach." },
-  { id: "thress",      label: "Thress",            description: "Every third move, pick one of three silly rule cards." },
+  { id: "classic",           label: "Classic",            description: "Regular chess, clean and familiar." },
+  { id: "three_check",       label: "Three-Check",         description: "Win by checking the enemy king three times." },
+  { id: "king_hill",         label: "King of the Hill",    description: "Win by marching your king into the center." },
+  { id: "atomic",            label: "Atomic",              description: "Captures explode nearby pieces." },
+  { id: "dice",              label: "Dice Chess",          description: "A die chooses which piece type must move." },
+  { id: "fog",               label: "Fog of War",          description: "You only see what your army can reach." },
+  { id: "thress",            label: "Thress",              description: "Every third move, pick one of three silly rule cards." },
+  { id: "blindfolded",       label: "Blindfolded",         description: "Neither player sees the pieces. Win by checkmate. Board reveals on game over." },
+  { id: "no_check",          label: "No-Check Chess",      description: "No check rule — move freely even in check. Capture the king to win." },
+  { id: "total_annihilation", label: "Total Annihilation", description: "Capture every last enemy piece to win. King capture doesn't end the game." },
 ];
 
 export const variantCardMeta = {
-  classic:     { icon: "♔", gradient: "linear-gradient(160deg, #ffeaa7 0%, #fdcb6e 55%, #e17055 100%)" },
-  three_check: { icon: "♚", gradient: "linear-gradient(160deg, #fab1a0 0%, #ff7675 55%, #d63031 100%)" },
-  king_hill:   { icon: "⛰", gradient: "linear-gradient(160deg, #55efc4 0%, #00b894 55%, #0984e3 100%)" },
-  atomic:      { icon: "💥", gradient: "linear-gradient(160deg, #ffeaa7 0%, #fd79a8 50%, #e84393 100%)" },
-  dice:        { icon: "🎲", gradient: "linear-gradient(160deg, #a29bfe 0%, #6c5ce7 55%, #341f97 100%)" },
-  fog:         { icon: "🌫", gradient: "linear-gradient(160deg, #dfe6e9 0%, #b2bec3 55%, #636e72 100%)" },
-  thress:      { icon: "🃏", gradient: "linear-gradient(160deg, #fd79a8 0%, #fdcb6e 50%, #00cec9 100%)" },
+  classic:           { icon: "♔",  gradient: "linear-gradient(160deg, #ffeaa7 0%, #fdcb6e 55%, #e17055 100%)" },
+  three_check:       { icon: "♚",  gradient: "linear-gradient(160deg, #fab1a0 0%, #ff7675 55%, #d63031 100%)" },
+  king_hill:         { icon: "⛰",  gradient: "linear-gradient(160deg, #55efc4 0%, #00b894 55%, #0984e3 100%)" },
+  atomic:            { icon: "💥", gradient: "linear-gradient(160deg, #ffeaa7 0%, #fd79a8 50%, #e84393 100%)" },
+  dice:              { icon: "🎲", gradient: "linear-gradient(160deg, #a29bfe 0%, #6c5ce7 55%, #341f97 100%)" },
+  fog:               { icon: "🌫", gradient: "linear-gradient(160deg, #dfe6e9 0%, #b2bec3 55%, #636e72 100%)" },
+  thress:            { icon: "🃏", gradient: "linear-gradient(160deg, #fd79a8 0%, #fdcb6e 50%, #00cec9 100%)" },
+  blindfolded:       { icon: "🙈", gradient: "linear-gradient(160deg, #2d3436 0%, #636e72 55%, #b2bec3 100%)" },
+  no_check:          { icon: "👑", gradient: "linear-gradient(160deg, #fdcb6e 0%, #e17055 55%, #d63031 100%)" },
+  total_annihilation:{ icon: "⚔️", gradient: "linear-gradient(160deg, #ff7675 0%, #d63031 55%, #6c5ce7 100%)" },
 };
 
 export const defaultVariantCardMeta = {

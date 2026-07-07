@@ -200,6 +200,11 @@ export function renderChessBoard() {
   const board = game.board || {};
   const legalFromSquares = new Set(Object.keys(game.legalMoves || {}));
   const fogSquares = new Set(game.hiddenSquares || []);
+  const isBlindfolded = game.variant?.id === "blindfolded";
+  const isRevealed = isBlindfolded && game.gameState === "gameover";
+  chessBoardEl.classList.toggle("is-blindfolded", isBlindfolded && !isRevealed);
+  chessBoardEl.classList.toggle("is-revealed", isRevealed);
+  moveListEl.classList.toggle("is-blindfolded", isBlindfolded);
 
   chessTurnEl.textContent =
     game.gameState === "playing"
@@ -259,7 +264,7 @@ export function handleChessSquareClick(square) {
     return;
   }
 
-  if (piece && piece.color === color && legalMovesFrom(square).length > 0) {
+  if (legalMovesFrom(square).length > 0) {
     state.selectedSquare = square;
   } else {
     state.selectedSquare = null;

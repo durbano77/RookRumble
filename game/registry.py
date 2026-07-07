@@ -27,6 +27,18 @@ VARIANTS = {
         "label": "Thress",
         "description": "Every third move, pick one of three silly rule cards.",
     },
+    "blindfolded": {
+        "label": "Blindfolded",
+        "description": "Neither player sees any pieces. Win by checkmate. Board reveals on game over.",
+    },
+    "no_check": {
+        "label": "No-Check Chess",
+        "description": "No check rule — move freely even in check. Capture the king to win.",
+    },
+    "total_annihilation": {
+        "label": "Total Annihilation",
+        "description": "Capture every last enemy piece to win. King capture doesn't end the game.",
+    },
 }
 
 BOT_DIFFICULTIES = {
