@@ -217,6 +217,7 @@ export function renderChessBoard() {
 
   for (const square of chessSquaresForPlayer()) {
     const piece = board[square];
+    const inCheck = game.isCheck && piece?.type === "king" && piece.color === game.turn;
     const cell = document.createElement("button");
     cell.type = "button";
     cell.className = "chess-square";
@@ -227,6 +228,7 @@ export function renderChessBoard() {
     cell.classList.toggle("is-last-move", isLastMoveSquare(square));
     cell.classList.toggle("is-movable", legalFromSquares.has(square) && isMyTurn());
     cell.classList.toggle("is-fog", fogSquares.has(square));
+    cell.classList.toggle("is-in-check", Boolean(inCheck));
     cell.classList.toggle("has-piece", Boolean(piece));
     cell.classList.toggle("piece-white", piece?.color === "white");
     cell.classList.toggle("piece-black", piece?.color === "black");
@@ -239,6 +241,8 @@ export function renderChessBoard() {
     }
     chessBoardEl.append(cell);
   }
+
+  animateMoveIfNew();
 }
 
 export function handleChessSquareClick(square) {
@@ -294,4 +298,68 @@ function renderMoveList() {
 export function renderGame() {
   renderChessBoard();
   renderMoveList();
+}
+
+// ── Move animations ───────────────────────────────────────────────────────────
+
+let lastAnimatedMoveKey = null;
+
+function animateMoveIfNew() {
+  const lastMove = state.game.lastMove;
+  if (!lastMove) {
+    lastAnimatedMoveKey = null; // reset on game restart
+    return;
+  }
+
+  const moveKey = `${lastMove.from}${lastMove.to}_${state.game.moveHistorySan?.length ?? 0}`;
+  if (moveKey === lastAnimatedMoveKey) return;
+  lastAnimatedMoveKey = moveKey;
+
+  // No visible piece at destination (atomic explosion, blindfolded, etc.) — skip
+  const piece = state.game.board?.[lastMove.to];
+  if (!piece) return;
+
+  const fromEl = chessBoardEl.querySelector(`[data-square="${lastMove.from}"]`);
+  const toEl   = chessBoardEl.querySelector(`[data-square="${lastMove.to}"]`);
+  if (!fromEl || !toEl) return;
+
+  const fromRect = fromEl.getBoundingClientRect();
+  const toRect   = toEl.getBoundingClientRect();
+  const dx = fromRect.left - toRect.left;
+  const dy = fromRect.top  - toRect.top;
+  if (Math.abs(dx) < 1 && Math.abs(dy) < 1) return;
+
+  // Hide the real piece while the ghost slides into place
+  toEl.classList.add("piece-animating");
+
+  const ghost = document.createElement("div");
+  ghost.className = `move-ghost piece-${piece.color}`;
+  ghost.textContent = pieceText(piece.symbol);
+  ghost.style.cssText = `
+    width:  ${toRect.width}px;
+    height: ${toRect.height}px;
+    left:   ${toRect.left}px;
+    top:    ${toRect.top}px;
+    transform: translate(${dx}px, ${dy}px);
+  `;
+  document.body.append(ghost);
+
+  // Double rAF ensures the browser paints the starting position before transitioning
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    ghost.style.transform = "translate(0, 0)";
+  }));
+
+  let done = false;
+  function finish() {
+    if (done) return;
+    done = true;
+    ghost.remove();
+    toEl.classList.remove("piece-animating");
+    if (lastMove.capture) {
+      toEl.classList.add("capture-flash");
+      setTimeout(() => toEl.classList.remove("capture-flash"), 380);
+    }
+  }
+  ghost.addEventListener("transitionend", finish, { once: true });
+  setTimeout(finish, 600); // safety fallback if transitionend doesn't fire
 }

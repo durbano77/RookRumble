@@ -216,12 +216,14 @@ class BaseGame:
     def push_legal_move(self, move):
         mover_index = self.player_index_for_turn()
         san = self.board.san(move)
+        is_capture = self.board.is_capture(move)
         self.board.push(move)
         self.move_count += 1
         self.last_move = {
             "from": chess.square_name(move.from_square),
             "to": chess.square_name(move.to_square),
             "promotion": chess.piece_symbol(move.promotion) if move.promotion else None,
+            "capture": is_capture,
         }
         self.move_history.append(move.uci())
         self.move_history_san.append(san)
