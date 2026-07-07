@@ -6,7 +6,7 @@ import {
   menuButton, closeMenuButton, menuExitMainButton, menuExitGamesButton,
   menuOpenSettingsButton, settingsBackButton,
   menuOpenCreditsButton, creditsBackButton,
-  menuModal, themeSelect, patternSelect, boardSelect, pieceSelect,
+  menuModal, themeSelect, patternSelect, boardSelect, pieceSelect, animSpeedSelect,
   stepButtons,
   gameSelectModal, gameModalClose, gameModalConfirm, timerGrid,
   quickMatchButton, cancelQueueButton,
@@ -82,13 +82,14 @@ for (const button of stepButtons) {
 }
 
 // Appearance
-for (const select of [themeSelect, patternSelect, boardSelect, pieceSelect]) {
+for (const select of [themeSelect, patternSelect, boardSelect, pieceSelect, animSpeedSelect]) {
   select.addEventListener("change", () => {
     applyAppearance({
-      theme: themeSelect.value,
-      pattern: patternSelect.value,
-      board: boardSelect.value,
-      pieces: pieceSelect.value,
+      theme:          themeSelect.value,
+      pattern:        patternSelect.value,
+      board:          boardSelect.value,
+      pieces:         pieceSelect.value,
+      animationSpeed: animSpeedSelect.value,
     });
   });
 }

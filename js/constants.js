@@ -1,11 +1,14 @@
 export const appearanceStorageKey = "rook-rumble-appearance";
 
 export const appearanceOptions = {
-  theme: ["forest", "midnight", "paper", "ocean", "berry"],
-  pattern: ["argyle", "dots", "grid", "plain"],
-  board: ["classic", "slate", "sand", "contrast"],
-  pieces: ["classic", "three_d", "woodcut", "marble"],
+  theme:          ["forest", "midnight", "paper", "ocean", "berry"],
+  pattern:        ["argyle", "dots", "grid", "plain"],
+  board:          ["classic", "slate", "sand", "contrast"],
+  pieces:         ["classic", "three_d", "woodcut", "marble"],
+  animationSpeed: ["instant", "fast", "normal", "slow"],
 };
+
+export const animationDurations = { instant: 0, fast: 140, normal: 280, slow: 520 };
 
 export const pieceSymbols = {
   P: "♟", N: "♞", B: "♝", R: "♜", Q: "♛", K: "♚",

@@ -1,7 +1,7 @@
 import {
-  themeSelect, patternSelect, boardSelect, pieceSelect,
+  themeSelect, patternSelect, boardSelect, pieceSelect, animSpeedSelect,
 } from "./dom.js";
-import { appearanceStorageKey, appearanceOptions } from "./constants.js";
+import { appearanceStorageKey, appearanceOptions, animationDurations } from "./constants.js";
 
 export function loadAppearance() {
   try {
@@ -17,10 +17,11 @@ function validValue(kind, value, fallback) {
 
 export function applyAppearance(nextAppearance = {}) {
   const appearance = {
-    theme:   validValue("theme",   nextAppearance.theme   || themeSelect.value,   "forest"),
-    pattern: validValue("pattern", nextAppearance.pattern || patternSelect.value, "argyle"),
-    board:   validValue("board",   nextAppearance.board   || boardSelect.value,   "classic"),
-    pieces:  validValue("pieces",  nextAppearance.pieces  || pieceSelect.value,   "classic"),
+    theme:          validValue("theme",          nextAppearance.theme          || themeSelect.value,       "forest"),
+    pattern:        validValue("pattern",        nextAppearance.pattern        || patternSelect.value,     "argyle"),
+    board:          validValue("board",          nextAppearance.board          || boardSelect.value,       "classic"),
+    pieces:         validValue("pieces",         nextAppearance.pieces         || pieceSelect.value,       "classic"),
+    animationSpeed: validValue("animationSpeed", nextAppearance.animationSpeed || animSpeedSelect.value,   "normal"),
   };
 
   document.body.dataset.theme   = appearance.theme;
@@ -28,10 +29,14 @@ export function applyAppearance(nextAppearance = {}) {
   document.body.dataset.board   = appearance.board;
   document.body.dataset.pieces  = appearance.pieces;
 
-  themeSelect.value   = appearance.theme;
-  patternSelect.value = appearance.pattern;
-  boardSelect.value   = appearance.board;
-  pieceSelect.value   = appearance.pieces;
+  const durationMs = animationDurations[appearance.animationSpeed] ?? 280;
+  document.documentElement.style.setProperty("--move-duration", `${durationMs}ms`);
+
+  themeSelect.value       = appearance.theme;
+  patternSelect.value     = appearance.pattern;
+  boardSelect.value       = appearance.board;
+  pieceSelect.value       = appearance.pieces;
+  animSpeedSelect.value   = appearance.animationSpeed;
 
   window.localStorage.setItem(appearanceStorageKey, JSON.stringify(appearance));
 }

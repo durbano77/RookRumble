@@ -319,6 +319,11 @@ function animateMoveIfNew() {
   const piece = state.game.board?.[lastMove.to];
   if (!piece) return;
 
+  const durationMs = parseInt(
+    getComputedStyle(document.documentElement).getPropertyValue("--move-duration"), 10
+  ) || 0;
+  if (durationMs === 0) return; // instant mode — no animation
+
   const fromEl = chessBoardEl.querySelector(`[data-square="${lastMove.from}"]`);
   const toEl   = chessBoardEl.querySelector(`[data-square="${lastMove.to}"]`);
   if (!fromEl || !toEl) return;
@@ -361,5 +366,5 @@ function animateMoveIfNew() {
     }
   }
   ghost.addEventListener("transitionend", finish, { once: true });
-  setTimeout(finish, 600); // safety fallback if transitionend doesn't fire
+  setTimeout(finish, durationMs + 120); // safety fallback if transitionend doesn't fire
 }

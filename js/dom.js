@@ -27,6 +27,7 @@ export const themeSelect = document.getElementById("theme-select");
 export const patternSelect = document.getElementById("pattern-select");
 export const boardSelect = document.getElementById("board-select");
 export const pieceSelect = document.getElementById("piece-select");
+export const animSpeedSelect = document.getElementById("anim-speed-select");
 export const continueToPlayButton = document.getElementById("continue-to-play");
 export const backToSetupButton = document.getElementById("back-to-setup");
 export const menuButton = document.getElementById("menu-button");
