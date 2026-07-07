@@ -1,4 +1,4 @@
-const CACHE = 'rook-rumble-v10';
+const CACHE = 'rook-rumble-v11';
 
 // Critical shell — small files that must be cached at install time for the
 // app to load at all. If any of these fail, the SW install fails gracefully
