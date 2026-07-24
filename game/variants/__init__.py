@@ -1,3 +1,4 @@
+from .army_draft import ArmyDraftGame
 from .atomic import AtomicGame
 from .blindfolded import BlindfoldedGame
 from .classic import ClassicGame
@@ -11,6 +12,7 @@ from .total_annihilation import TotalAnnihilationGame
 
 VARIANT_CLASSES = {
     "classic": ClassicGame,
+    "army_draft": ArmyDraftGame,
     "three_check": ThreeCheckGame,
     "king_hill": KingHillGame,
     "atomic": AtomicGame,

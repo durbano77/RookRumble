@@ -10,12 +10,14 @@ import {
   stepButtons,
   gameSelectModal, gameModalClose, gameModalConfirm, timerGrid,
   quickMatchButton, cancelQueueButton,
+  draftResetButton, draftSubmitButton,
 } from "./dom.js";
 import { state, send } from "./state.js";
 import { applyAppearance } from "./appearance.js";
 import { renderBotSelector, confirmGameSelect, closeGameSelectModal } from "./variants.js";
 import { setStep } from "./menu.js";
 import { openMenu, closeMenu, showMenuView, exitToMainMenu, exitToGameSelection } from "./menu.js";
+import { resetDraft, submitDraftArmy } from "./draft.js";
 
 // Promotion buttons
 for (const button of promotionPanelEl.querySelectorAll("[data-promotion]")) {
@@ -96,6 +98,10 @@ for (const select of [themeSelect, patternSelect, boardSelect, pieceSelect, anim
 
 // Bot selector
 botDifficultySelect.addEventListener("change", () => { renderBotSelector(); });
+
+// Army draft
+draftResetButton.addEventListener("click", () => { resetDraft(); });
+draftSubmitButton.addEventListener("click", () => { submitDraftArmy(); });
 
 // Room code input: digits only
 roomCodeInput.addEventListener("input", () => {

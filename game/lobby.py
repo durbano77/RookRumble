@@ -133,6 +133,11 @@ class GameServer:
         active_game = room.active_game()
         if not room.bot_enabled() or active_game is None:
             return
+
+        if active_game.bot_needs_predraft():
+            active_game.bot_predraft(room.bot_difficulty)
+            await asyncio.sleep(0)
+
         if BOT_DIFFICULTIES.get(room.bot_difficulty, {}).get("engine"):
             return  # Client-side engine handles its own moves
 
@@ -256,6 +261,18 @@ class GameServer:
                 await ws.send_json({"type": "error", "message": "Choose a variant first."})
                 return
             ok, message = active_game.choose_mutator(slot, str(payload.get("mutatorId", "")))
+            if not ok:
+                await ws.send_json({"type": "error", "message": message})
+            elif room.bot_enabled():
+                await self.play_bot_turns(room)
+            await room.broadcast_sync()
+            return
+
+        if message_type == "submit_draft":
+            if not active_game:
+                await ws.send_json({"type": "error", "message": "Choose a variant first."})
+                return
+            ok, message = active_game.submit_draft(slot, payload.get("placements"))
             if not ok:
                 await ws.send_json({"type": "error", "message": message})
             elif room.bot_enabled():

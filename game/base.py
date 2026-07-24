@@ -240,6 +240,17 @@ class BaseGame:
     def choose_mutator(self, player_index, mutator_id):
         return False, "Thress is not selected."
 
+    # ── Draft stub (overridden by ArmyDraftGame) ─────────────────────────────
+
+    def submit_draft(self, player_index, placements):
+        return False, "This variant doesn't use a draft phase."
+
+    def bot_needs_predraft(self):
+        return False
+
+    def bot_predraft(self, difficulty):
+        pass
+
     # ── Bot ──────────────────────────────────────────────────────────────────
 
     def _can_bot_move(self):

@@ -9,7 +9,7 @@ const GAME_FILES = [
   'registry.py', 'room.py',
 ];
 const VARIANT_FILES = [
-  '__init__.py', 'atomic.py', 'blindfolded.py', 'classic.py', 'dice.py', 'fog.py',
+  '__init__.py', 'army_draft.py', 'atomic.py', 'blindfolded.py', 'classic.py', 'dice.py', 'fog.py',
   'king_hill.py', 'no_check.py', 'three_check.py', 'thress.py', 'total_annihilation.py',
 ];
 

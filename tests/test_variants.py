@@ -8,6 +8,7 @@ import pytest
 
 from game.variants import VARIANT_CLASSES
 from game.registry import VARIANTS, BOT_DIFFICULTIES
+from game.variants.army_draft import ArmyDraftGame, DRAFT_BUDGET, DRAFT_POINT_VALUES
 from game.variants.blindfolded import BlindfoldedGame
 from game.variants.no_check import NoCheckGame, _NoCheckBoard
 from game.variants.total_annihilation import TotalAnnihilationGame, _AnarchistBoard
@@ -27,14 +28,34 @@ def push_uci(game, uci):
     game.push_legal_move(move)
 
 
+def classic_army(rank_pawn, rank_back):
+    return [
+        {"type": "pawn", "square": f"{f}{rank_pawn}"} for f in "abcdefgh"
+    ] + [
+        {"type": "rook", "square": f"a{rank_back}"}, {"type": "knight", "square": f"b{rank_back}"},
+        {"type": "bishop", "square": f"c{rank_back}"}, {"type": "queen", "square": f"d{rank_back}"},
+        {"type": "bishop", "square": f"f{rank_back}"}, {"type": "knight", "square": f"g{rank_back}"},
+        {"type": "rook", "square": f"h{rank_back}"},
+    ]
+
+
+def make_drafted_game():
+    """An army_draft game with both sides drafted into the classic setup, ready to play."""
+    g = make_game("army_draft")
+    g.submit_draft(0, classic_army(2, 1))
+    g.submit_draft(1, classic_army(7, 8))
+    return g
+
+
 # ── registry / constants ─────────────────────────────────────────────────────
 
 class TestRegistry:
-    def test_all_ten_variants_registered(self):
+    def test_all_variants_registered(self):
         expected = {
             "classic", "three_check", "king_hill", "atomic",
             "dice", "fog", "thress",
             "blindfolded", "no_check", "total_annihilation",
+            "army_draft",
         }
         assert set(VARIANT_CLASSES.keys()) == expected
 
@@ -48,7 +69,8 @@ class TestRegistry:
         for vid, cls in VARIANT_CLASSES.items():
             g = cls(vid)
             g.start()
-            assert g.game_state == "playing"
+            expected_state = "drafting" if vid == "army_draft" else "playing"
+            assert g.game_state == expected_state
 
 
 # ── classic sanity ───────────────────────────────────────────────────────────
@@ -391,6 +413,131 @@ class TestAnarchistBoard:
     def test_legal_equals_pseudo_legal_anarchist(self):
         b = _AnarchistBoard()
         assert list(b.legal_moves) == list(b.pseudo_legal_moves)
+
+
+# ── army draft ───────────────────────────────────────────────────────────────
+
+class TestArmyDraftGame:
+    def test_starts_in_drafting_state(self):
+        g = make_game("army_draft")
+        assert g.game_state == "drafting"
+
+    def test_kings_fixed_on_start(self):
+        g = make_game("army_draft")
+        assert g.board.piece_at(chess.E1) == chess.Piece(chess.KING, chess.WHITE)
+        assert g.board.piece_at(chess.E8) == chess.Piece(chess.KING, chess.BLACK)
+
+    def test_board_payload_hides_opponent_army_during_draft(self):
+        g = make_game("army_draft")
+        g.submit_draft(0, [{"type": "queen", "square": "d1"}])
+        # Black hasn't drafted anything visible to White yet, and White's own
+        # queen shouldn't leak to Black's viewer.
+        white_view = g.board_payload(0)
+        black_view = g.board_payload(1)
+        assert "d1" in white_view
+        assert "d1" not in black_view
+        # Both kings are always visible to everyone.
+        assert "e1" in white_view and "e8" in white_view
+        assert "e1" in black_view and "e8" in black_view
+
+    def test_rejects_over_budget_army(self):
+        g = make_game("army_draft")
+        ok, msg = g.submit_draft(0, [{"type": "queen", "square": s} for s in ("a1", "b1", "c1", "d1", "f1")])
+        assert not ok
+        assert "budget" in msg.lower()
+
+    def test_rejects_wrong_rank(self):
+        g = make_game("army_draft")
+        ok, msg = g.submit_draft(0, [{"type": "pawn", "square": "a5"}])
+        assert not ok
+
+    def test_rejects_kings_square(self):
+        g = make_game("army_draft")
+        ok, msg = g.submit_draft(0, [{"type": "queen", "square": "e1"}])
+        assert not ok
+
+    def test_rejects_duplicate_square(self):
+        g = make_game("army_draft")
+        ok, msg = g.submit_draft(0, [
+            {"type": "pawn", "square": "a1"}, {"type": "rook", "square": "a1"},
+        ])
+        assert not ok
+
+    def test_rejects_black_units_on_white_ranks(self):
+        g = make_game("army_draft")
+        ok, msg = g.submit_draft(1, [{"type": "pawn", "square": "a2"}])
+        assert not ok
+
+    def test_cannot_submit_twice(self):
+        g = make_game("army_draft")
+        ok, _ = g.submit_draft(0, [{"type": "pawn", "square": "a1"}])
+        assert ok
+        ok, msg = g.submit_draft(0, [{"type": "pawn", "square": "b1"}])
+        assert not ok
+
+    def test_stays_drafting_until_both_submit(self):
+        g = make_game("army_draft")
+        g.submit_draft(0, classic_army(2, 1))
+        assert g.game_state == "drafting"
+        g.submit_draft(1, classic_army(7, 8))
+        assert g.game_state == "playing"
+
+    def test_transition_reconstructs_classic_position(self):
+        g = make_drafted_game()
+        # Matches the classic starting layout, minus castling rights — a drafted
+        # rook/king pair was just placed, not "unmoved" in the traditional sense.
+        assert g.board.board_fen() == chess.Board().board_fen()
+        assert g.board.castling_rights == chess.BB_EMPTY
+
+    def test_playing_after_both_draft_has_legal_moves(self):
+        g = make_drafted_game()
+        snap = g.snapshot(0)
+        assert snap["gameState"] == "playing"
+        assert len(snap["legalMoves"]) == 10
+
+    def test_moves_work_after_draft(self):
+        g = make_drafted_game()
+        ok, _ = g.move(0, "e2", "e4")
+        assert ok
+
+    def test_bot_needs_predraft_until_submitted(self):
+        g = make_game("army_draft")
+        assert g.bot_needs_predraft() is True
+        g.bot_predraft("easy")
+        assert g.bot_needs_predraft() is False
+
+    def test_bot_predraft_respects_budget_and_ranks(self):
+        g = make_game("army_draft")
+        g.bot_predraft("easy")
+        spent = sum(DRAFT_POINT_VALUES[pt] for _, pt in g.drafts[1])
+        assert spent <= DRAFT_BUDGET
+        for square, _ in g.drafts[1]:
+            assert chess.square_rank(square) in {6, 7}
+            assert square != chess.E8
+
+    def test_bot_predraft_lets_game_start(self):
+        g = make_game("army_draft")
+        g.bot_predraft("easy")
+        g.submit_draft(0, classic_army(2, 1))
+        assert g.game_state == "playing"
+
+    def test_variant_payload_fields(self):
+        g = make_game("army_draft")
+        payload = g.variant_payload()
+        assert payload["draftBudget"] == DRAFT_BUDGET
+        assert payload["draftReady"] == [False, False]
+        g.submit_draft(0, [{"type": "pawn", "square": "a1"}])
+        assert g.variant_payload()["draftReady"] == [True, False]
+
+    def test_variant_payload_id(self):
+        g = make_game("army_draft")
+        assert g.variant_payload()["id"] == "army_draft"
+
+    def test_restart_resets_drafts(self):
+        g = make_drafted_game()
+        g.restart()
+        assert g.game_state == "drafting"
+        assert g.drafts == [None, None]
 
 
 # ── snapshot shape ───────────────────────────────────────────────────────────

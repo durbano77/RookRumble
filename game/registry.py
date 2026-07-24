@@ -39,6 +39,10 @@ VARIANTS = {
         "label": "Total Annihilation",
         "description": "Capture every last enemy piece to win. King capture doesn't end the game.",
     },
+    "army_draft": {
+        "label": "Army Draft",
+        "description": "Draft a 39-point army onto your first two ranks, king fixed, then play it out.",
+    },
 }
 
 BOT_DIFFICULTIES = {

@@ -98,6 +98,15 @@ class OfflineSession:
             self._run_bot_turns()
         return self._sync()
 
+    def _on_submit_draft(self, payload):
+        if not self.room:
+            return lobby_sync_payload()
+        game = self.room.active_game()
+        if game:
+            game.submit_draft(self.player_index, payload.get("placements"))
+            self._run_bot_turns()
+        return self._sync()
+
     def _on_restart_game(self, payload):
         if not self.room:
             return lobby_sync_payload()
@@ -134,6 +143,10 @@ class OfflineSession:
         difficulty = self.room.bot_difficulty
         if not game or not self.room.bot_enabled():
             return
+
+        if game.bot_needs_predraft():
+            game.bot_predraft(difficulty)
+
         if BOT_DIFFICULTIES.get(difficulty, {}).get("engine"):
             return  # Engine moves come from client-side Stockfish
         safety = 0

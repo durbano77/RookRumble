@@ -26,6 +26,7 @@ export const defaultVariants = [
   { id: "blindfolded",       label: "Blindfolded",         description: "Neither player sees the pieces. Win by checkmate. Board reveals on game over." },
   { id: "no_check",          label: "No-Check Chess",      description: "No check rule — move freely even in check. Capture the king to win." },
   { id: "total_annihilation", label: "Total Annihilation", description: "Capture every last enemy piece to win. King capture doesn't end the game." },
+  { id: "army_draft",         label: "Army Draft",         description: "Draft a 39-point army onto your first two ranks, king fixed, then play it out." },
 ];
 
 export const variantCardMeta = {
@@ -39,6 +40,7 @@ export const variantCardMeta = {
   blindfolded:       { icon: "🙈", gradient: "linear-gradient(160deg, #2d3436 0%, #636e72 55%, #b2bec3 100%)" },
   no_check:          { icon: "👑", gradient: "linear-gradient(160deg, #fdcb6e 0%, #e17055 55%, #d63031 100%)" },
   total_annihilation:{ icon: "⚔️", gradient: "linear-gradient(160deg, #ff7675 0%, #d63031 55%, #6c5ce7 100%)" },
+  army_draft:        { icon: "🛡️", gradient: "linear-gradient(160deg, #74b9ff 0%, #0984e3 55%, #2d3436 100%)" },
 };
 
 export const defaultVariantCardMeta = {

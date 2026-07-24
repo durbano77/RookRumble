@@ -7,6 +7,10 @@ import { pieceSymbols } from "./constants.js";
 import {
   state, send, playerColor, isMyTurn, pendingMutator, isMyMutatorChoice, variantTitle,
 } from "./state.js";
+import {
+  isDrafting, isOwnDraftSquare, hasSubmittedDraft, draftLocalPieceAt,
+  handleDraftSquareClick, renderDraftPanel,
+} from "./draft.js";
 
 // ── Drag & drop ────────────────────────────────────────────────────────────
 
@@ -202,8 +206,10 @@ export function renderChessBoard() {
   const fogSquares = new Set(game.hiddenSquares || []);
   const isBlindfolded = game.variant?.id === "blindfolded";
   const isRevealed = isBlindfolded && game.gameState === "gameover";
+  const drafting = isDrafting();
   chessBoardEl.classList.toggle("is-blindfolded", isBlindfolded && !isRevealed);
   chessBoardEl.classList.toggle("is-revealed", isRevealed);
+  chessBoardEl.classList.toggle("is-drafting", drafting);
   moveListEl.classList.toggle("is-blindfolded", isBlindfolded);
 
   chessTurnEl.textContent =
@@ -216,7 +222,7 @@ export function renderChessBoard() {
   chessBoardEl.innerHTML = "";
 
   for (const square of chessSquaresForPlayer()) {
-    const piece = board[square];
+    const piece = board[square] || (drafting ? draftLocalPieceAt(square) : null);
     const inCheck = game.isCheck && piece?.type === "king" && piece.color === game.turn;
     const cell = document.createElement("button");
     cell.type = "button";
@@ -232,6 +238,12 @@ export function renderChessBoard() {
     cell.classList.toggle("has-piece", Boolean(piece));
     cell.classList.toggle("piece-white", piece?.color === "white");
     cell.classList.toggle("piece-black", piece?.color === "black");
+    if (drafting) {
+      const isKingSquare = square === "e1" || square === "e8";
+      cell.classList.toggle("is-draft-king", isKingSquare);
+      cell.classList.toggle("is-draft-slot", !isKingSquare && isOwnDraftSquare(square) && !hasSubmittedDraft());
+      cell.classList.toggle("is-draft-other", !isKingSquare && !isOwnDraftSquare(square));
+    }
     cell.textContent = piece ? pieceText(piece.symbol) : "";
     cell.setAttribute("aria-label", piece ? `${piece.color} ${piece.type} on ${square}` : square);
     cell.addEventListener("click", () => handleChessSquareClick(square));
@@ -242,11 +254,17 @@ export function renderChessBoard() {
     chessBoardEl.append(cell);
   }
 
+  renderDraftPanel();
   animateMoveIfNew();
 }
 
 export function handleChessSquareClick(square) {
   if (ignoreNextClick) { ignoreNextClick = false; return; }
+  if (isDrafting()) {
+    handleDraftSquareClick(square);
+    renderChessBoard();
+    return;
+  }
   if (!isMyTurn() || state.pendingPromotion || pendingMutator()) return;
 
   const piece = state.game.board?.[square];
